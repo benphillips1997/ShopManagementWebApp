@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="shopmanagementwebapp.client/shopmanagementwebapp.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="ShopManagementWebApp.Server/ShopManagementWebApp.Server.csproj" />
+</Solution>

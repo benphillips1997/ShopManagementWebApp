@@ -1,8 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using ShopManagementWebApp.Server;
+using ShopManagementWebApp.Server.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<ShopManagementDbContext>();
+
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 

@@ -35,17 +35,11 @@ namespace ShopManagementWebApp.Server.Services
 
         public bool UpdateProduct(Product product)
         {
-            if (product == null)
-            {
-                return false;
-            }
+            if (product == null) { return false; }
 
             var productToUpdate = _context.Products.FirstOrDefault(x => x.Id == product.Id);
 
-            if (productToUpdate == null)
-            {
-                return false;
-            }
+            if (productToUpdate == null) { return false; }
 
             productToUpdate.Name = product.Name;
             productToUpdate.Description = product.Description;

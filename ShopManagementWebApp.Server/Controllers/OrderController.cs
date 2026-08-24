@@ -24,7 +24,7 @@ namespace ShopManagementWebApp.Server.Controllers
             return _service.GetOrders();
         }
 
-        [HttpGet("/api/GetOrder({id})")]
+        [HttpGet("/api/GetOrder/{id}")]
         public Order? GetOrder(int id)
         {
             return _service.GetOrder(id);
@@ -42,7 +42,7 @@ namespace ShopManagementWebApp.Server.Controllers
             return _service.UpdateOrder(order);
         }
 
-        [HttpDelete("/api/DeleteOrder({id})")]
+        [HttpDelete("/api/DeleteOrder/{id}")]
         public bool DeleteOrder(int id)
         {
             return _service.DeleteOrder(id);

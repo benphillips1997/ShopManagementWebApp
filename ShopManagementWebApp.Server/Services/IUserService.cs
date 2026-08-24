@@ -1,4 +1,5 @@
-﻿using ShopManagementWebApp.Server.Models;
+﻿using ShopManagementWebApp.Server.Dtos;
+using ShopManagementWebApp.Server.Models;
 
 namespace ShopManagementWebApp.Server.Services
 {
@@ -9,5 +10,6 @@ namespace ShopManagementWebApp.Server.Services
         bool AddUser(User user);
         bool UpdateUser(User user);
         bool DeleteUser(int id);
+        UserLoginResponse Login(User user);
     }
 }

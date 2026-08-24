@@ -18,28 +18,28 @@ namespace ShopManagementWebApp.Server.Controllers
             _service = basketService;
         }
 
-        [HttpGet("/api/GetBasket({id})")]
-        public Basket? GetBasket(int id)
+        [HttpGet("/api/GetBasket/{userId}")]
+        public Basket? GetBasket(int userId)
         {
-            return _service.GetBasket(id);
+            return _service.GetBasket(userId);
         }
 
-        [HttpPost("/api/AddItemToBasket({id})")]
-        public bool AddItemToBasket(int id, [FromBody] BasketItem item)
+        [HttpPost("/api/AddItemToBasket/{basketId}")]
+        public bool AddItemToBasket(int basketId, [FromBody] BasketItem item)
         {
-            return _service.AddItemToBasket(id, item);
+            return _service.AddItemToBasket(basketId, item);
         }
 
-        [HttpPost("/api/RemoveItemFromBasket({id})")]
-        public bool RemoveItemFromBasket(int id, [FromBody] BasketItem item)
+        [HttpPost("/api/RemoveItemFromBasket/{basketId}")]
+        public bool RemoveItemFromBasket(int basketId, [FromBody] BasketItem item)
         {
-            return _service.DeleteItemFromBasket(id, item);
+            return _service.DeleteItemFromBasket(basketId, item);
         }
 
-        [HttpDelete("/api/ClearBasket({id})")]
-        public bool ClearBasket(int id)
+        [HttpDelete("/api/ClearBasket/{basketId}")]
+        public bool ClearBasket(int basketId)
         {
-            return _service.ClearBasket(id);
+            return _service.ClearBasket(basketId);
         }
     }
 }

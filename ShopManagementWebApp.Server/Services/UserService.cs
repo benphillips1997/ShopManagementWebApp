@@ -1,4 +1,6 @@
-﻿using ShopManagementWebApp.Server.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopManagementWebApp.Server.Dtos;
+using ShopManagementWebApp.Server.Models;
 
 namespace ShopManagementWebApp.Server.Services
 {
@@ -9,6 +11,34 @@ namespace ShopManagementWebApp.Server.Services
         public UserService(ShopManagementDbContext context)
         {
             _context = context;
+        }
+
+        public UserLoginResponse Login(User user)
+        {
+            var foundUser = _context.Users.Include(u => u.Basket).Include(u => u.Orders).FirstOrDefault(x => x.Email == user.Email);
+
+            var response = new UserLoginResponse()
+            {
+                Success = true
+            };
+
+            if (foundUser == null)
+            {
+                response.Success = false;
+                response.ErrorMessage = "User does not exist";
+
+                return response;
+            }
+
+            if (foundUser.Password !=  user.Password)
+            {
+                response.Success = false;
+                response.ErrorMessage = "Incorrect password";
+            }
+
+            response.User = foundUser;
+
+            return response;
         }
 
         public List<User> GetUsers()
@@ -24,6 +54,8 @@ namespace ShopManagementWebApp.Server.Services
         public bool AddUser(User user)
         {
             if (user == null) { return false; }
+
+            if (user.Basket ==  null) { user.Basket = new Basket(); }
 
             _context.Users.Add(user);
             _context.SaveChanges();

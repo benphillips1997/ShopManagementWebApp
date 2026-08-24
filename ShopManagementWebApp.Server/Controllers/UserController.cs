@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
 using ShopManagementWebApp.Server.Services;
 
@@ -18,13 +19,19 @@ namespace ShopManagementWebApp.Server.Controllers
             _service = userService;
         }
 
+        [HttpPost("/api/Login")]
+        public UserLoginResponse Login([FromBody] User user)
+        {
+            return _service.Login(user);
+        }
+
         [HttpGet("/api/GetUsers")]
         public IEnumerable<User> GetUsers()
         {
             return _service.GetUsers();
         }
 
-        [HttpGet("/api/GetUser({id})")]
+        [HttpGet("/api/GetUser/{id}")]
         public User? GetUser(int id)
         {
             return _service.GetUser(id);

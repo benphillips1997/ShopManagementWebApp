@@ -23,7 +23,7 @@ namespace ShopManagementWebApp.Server.Controllers
             return _service.GetProducts();
         }
 
-        [HttpGet("/api/GetProduct({id})")]
+        [HttpGet("/api/GetProduct/{id}")]
         public Product? GetProduct(int id)
         {
             return _service.GetProduct(id);
@@ -41,7 +41,7 @@ namespace ShopManagementWebApp.Server.Controllers
             return _service.UpdateProduct(product);
         }
 
-        [HttpDelete("/api/DeleteProduct({id})")]
+        [HttpDelete("/api/DeleteProduct/{id}")]
         public bool DeleteProduct(int id)
         {
             return _service.DeleteProduct(id);

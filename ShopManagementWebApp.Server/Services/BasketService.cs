@@ -1,4 +1,5 @@
-﻿using ShopManagementWebApp.Server.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopManagementWebApp.Server.Models;
 
 namespace ShopManagementWebApp.Server.Services
 {
@@ -11,44 +12,73 @@ namespace ShopManagementWebApp.Server.Services
             _context = context;
         }
 
-        public Basket? GetBasket(int id)
+        public Basket? GetBasket(int userId)
         {
-            return _context.Baskets.FirstOrDefault(x => x.Id == id);
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+
+            if (user == null) { return null; }
+
+            return _context.Baskets.FirstOrDefault(x => x.Id == user.Basket.Id);
         }
 
-        public bool AddItemToBasket(int id, BasketItem item)
+        public bool AddItemToBasket(int basketId, BasketItem item)
         {
-            if (item == null) { return false; }
-
-            var basketToUpdate = _context.Baskets.FirstOrDefault(x => x.Id == id);
+            var basketToUpdate = _context.Baskets.Include(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == basketId);
 
             if (basketToUpdate == null) { return false; }
 
-            basketToUpdate.Items.Add(item);
+            var existingItem = basketToUpdate.Items.FirstOrDefault(x => x.Product.Id == item.Product.Id);
+
+            if (existingItem == null)
+            {
+                basketToUpdate.Items.Add(item);
+            }
+            else
+            {
+                int index = basketToUpdate.Items.IndexOf(existingItem);
+                basketToUpdate.Items[index].Count += item.Count;
+            }
 
             _context.SaveChanges();
 
             return true;
         }
 
-        public bool DeleteItemFromBasket(int id, BasketItem item)
+        public bool DeleteItemFromBasket(int basketId, BasketItem item)
         {
             if (item == null) { return false; }
 
-            var basketToUpdate = _context.Baskets.FirstOrDefault(x => x.Id == id);
+            var basketToUpdate = _context.Baskets.Include(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == basketId);
 
             if (basketToUpdate == null) { return false; }
 
-            bool success = basketToUpdate.Items.Remove(item);
+            var existingItem = basketToUpdate.Items.FirstOrDefault(x => x.Product.Id == item.Product.Id);
+
+            if (existingItem == null)
+            {
+                return false;
+            }
+
+            int index = basketToUpdate.Items.IndexOf(existingItem);
+            bool success = true;
+
+            if (existingItem.Count > 1)
+            {                
+                basketToUpdate.Items[index].Count -= item.Count;
+            }
+            else
+            {
+                success = basketToUpdate.Items.Remove(item);
+            }            
 
             _context.SaveChanges();
 
             return success;
         }
 
-        public bool ClearBasket(int id)
+        public bool ClearBasket(int basketId)
         {
-            var basketToUpdate = _context.Baskets.FirstOrDefault(x => x.Id == id);
+            var basketToUpdate = _context.Baskets.FirstOrDefault(x => x.Id == basketId);
 
             if (basketToUpdate == null) { return false; }
 

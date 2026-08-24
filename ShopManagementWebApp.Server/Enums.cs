@@ -4,16 +4,18 @@
     {
         public enum UserType
         {
-            Admin,
-            Customer
+            Customer = 0,
+            Admin = 1,
+            SuperAdmin = 2,
+            Guest = 3
         }
 
         public enum OrderStatus
         {
-            Failed,
-            Pending,
-            Successful,
-            Delivered
+            Failed = 0,
+            Pending = 1,
+            Successful = 2,
+            Delivered = 3
         }
     }
 }

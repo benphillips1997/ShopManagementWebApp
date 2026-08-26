@@ -3,9 +3,9 @@ import type { OrderStatus, UserType } from "./enums";
 export interface Product {
     id?: number;
     name: string;
-    description: string;
+    description?: string;
     cost: number;
-    imageSource: string;
+    imageSource?: string;
     stock: number;
 }
 
@@ -53,6 +53,6 @@ export interface Order {
 
 export interface UserLoginResponse {
     user: User;
-    errorMessage: string;
-    success: boolean;
+    errorMessage?: string;
+    success?: boolean;
 }

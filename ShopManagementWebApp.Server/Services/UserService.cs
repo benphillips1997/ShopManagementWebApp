@@ -15,7 +15,8 @@ namespace ShopManagementWebApp.Server.Services
 
         public UserLoginResponse Login(User user)
         {
-            var foundUser = _context.Users.Include(u => u.Basket).Include(u => u.Orders).FirstOrDefault(x => x.Email == user.Email);
+            var foundUser = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product)
+                .Include(u => u.Orders).FirstOrDefault(x => x.Email == user.Email);
 
             var response = new UserLoginResponse()
             {
@@ -55,7 +56,12 @@ namespace ShopManagementWebApp.Server.Services
         {
             if (user == null) { return false; }
 
-            if (user.Basket ==  null) { user.Basket = new Basket(); }
+            if (user.Basket == null) { user.Basket = new Basket(); }
+
+            if (_context.Users.FirstOrDefault(u => u.Email == user.Email) != null)
+            {
+                return false;
+            }
 
             _context.Users.Add(user);
             _context.SaveChanges();

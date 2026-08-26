@@ -12,9 +12,9 @@ namespace ShopManagementWebApp.Server.Services
             _context = context;
         }
 
-        public List<Order> GetOrders()
+        public List<Order> GetOrders(int userId = -1)
         {
-            return _context.Orders.ToList();
+            return _context.Orders.Where(o => o.User.Id == userId || userId == -1).ToList();
         }
 
         public Order? GetOrder(int id)

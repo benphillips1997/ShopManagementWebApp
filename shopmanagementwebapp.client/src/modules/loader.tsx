@@ -1,6 +1,6 @@
 import { Oval } from 'react-loader-spinner';
 
-const size = 250;
+const defaultSize = 250;
 
 interface LoaderProps {
     visible: boolean;
@@ -14,8 +14,8 @@ function Loader({ visible, height, width, backgroundColor, spinnerColor }: Loade
     return (
         <div className="center">
             <Oval
-                height={height || size}
-                width={width || size}
+                height={height || defaultSize}
+                width={width || defaultSize}
                 color={spinnerColor || "#22619c"}
                 visible={visible}
                 ariaLabel="oval-loading"

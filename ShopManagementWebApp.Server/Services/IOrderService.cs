@@ -4,7 +4,7 @@ namespace ShopManagementWebApp.Server.Services
 {
     public interface IOrderService
     {
-        List<Order> GetOrders();
+        List<Order> GetOrders(int userId = -1);
         Order? GetOrder(int id);
         bool AddOrder(Order order);
         bool UpdateOrder(Order order);

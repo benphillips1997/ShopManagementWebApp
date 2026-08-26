@@ -3,14 +3,16 @@ import type { BasketItem, Product } from "../interfaces";
 import styled from "styled-components";
 import Loader from "../modules/loader";
 import FloatingBasket from "../modules/floatingBasket";
-import { useLoaderData } from "react-router-dom";
 import { useAuth } from "../modules/authProvider";
-import Navbar from "../modules/navBar";
+import Navbar from "../modules/navbar";
+import ErrorMessage from "../modules/errorMessage";
 
 function Products() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const user = useAuth()?.user;
+    const auth = useAuth();
+    const user = auth?.user;
+    const [productError, setProductError] = useState<boolean[]>([]);
 
     useEffect(() => {
         loadProducts();
@@ -36,9 +38,11 @@ function Products() {
         }
     }
 
-    const addToBasket = (product: Product) => {
+    const addToBasket = (product: Product, key: number) => {
         if (!user?.id) {
-            console.log("User not logged in");
+            const newArr = productError;
+            newArr[key] = true;
+            setProductError([...newArr]);
             return;
         }
 
@@ -55,8 +59,19 @@ function Products() {
 
         fetch(`/api/AddItemToBasket/${user?.basket?.id}`, requestOptions).then(async response => {
                 if (response.ok) {
-                    console.log("Item added to basket");
-                    const data = await response.json();
+                    const success = await response.json();
+                    if (success) {
+                        console.log("Item added to basket");
+                        const items = user.basket?.items ?? [];
+                        const index = items.findIndex(i => i.product.id === product.id);
+                        if (index !== -1) {
+                            items[index].count += 1;
+                            auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
+                        }
+                        else {
+                            auth?.setUser({...user, basket: {...user.basket, items: [...items, basketItem]}});
+                        }                        
+                    }
                 }
                 else {
                     console.log("Response not okay");
@@ -69,22 +84,23 @@ function Products() {
     return (
     <>
         <Navbar />
-        <div className='core' style={{ width: user?.id ? '80%' : '100%' }}>
+        <div style={{ width: user?.id ? '80%' : '100%' }}>
             {!loading ? <GridContainer $length={products.length}>
                 {products && products.map((product, key) => 
                     <GridItem key={key}>
                         <p>{product.name}</p>
-                        <p>{product.description}</p>
-                        <p>{product.imageSource}</p>
+                        <p>{product.description ?? ""}</p>
+                        <img src={product.imageSource} alt={`Image of ${product.name}`} />
                         <p>£{product.cost.toFixed(2)}</p>
-                        <AddToBasketButton onClick={() => addToBasket(product)}>
+                        <AddToBasketButton onClick={() => addToBasket(product, key)}>
                             Add to basket
                         </AddToBasketButton>
+                        {productError[key] && <ErrorMessage message={"You must login first"} size={10} time={10} />}
                     </GridItem>
                 )}
             </GridContainer>
             : <Loader visible={loading} />}
-            {user?.id && <FloatingBasket width={20} user={user} />}
+            {user?.id && <FloatingBasket width={20} user={user} auth={auth} />}
         </div>
     </>    
     );
@@ -123,4 +139,7 @@ const GridItem = styled.div`
 
 const AddToBasketButton = styled.button`
     background-color: #4CAF50;
+    border-radius: 8px;
+    padding: 5px 16px 5px 16px;
+    font-size: 16px;
 `

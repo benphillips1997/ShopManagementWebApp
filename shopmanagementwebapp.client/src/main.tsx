@@ -8,6 +8,8 @@ import Register from './pages/register.tsx';
 import type { User } from './interfaces.tsx';
 import AuthProvider, { useAuth } from './modules/authProvider.tsx';
 import ErrorPage from './modules/errorPage.tsx';
+import Orders from './pages/orders.tsx';
+import Order from './pages/order.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,16 @@ const router = createBrowserRouter([
   { 
     path: '/register', 
     Component: Register 
+  },
+  {
+    path: '/orders',
+    Component: Orders,
+    children: [
+      {
+        path: ':orderId',
+        Component: Order
+      }
+    ]
   }
 ]);
 
@@ -39,7 +51,6 @@ createRoot(document.getElementById('root')!).render(
 
 function Error() {
   let error = useRouteError();
-
   return <ErrorPage error={error} />
 }
 

@@ -18,7 +18,9 @@ namespace ShopManagementWebApp.Server.Services
 
             if (user == null) { return null; }
 
-            return _context.Baskets.FirstOrDefault(x => x.Id == user.Basket.Id);
+            var basket = _context.Baskets.FirstOrDefault(x => x.Id == user.Basket.Id);
+
+            return basket;
         }
 
         public bool AddItemToBasket(int basketId, BasketItem item)
@@ -64,11 +66,15 @@ namespace ShopManagementWebApp.Server.Services
 
             if (existingItem.Count > 1)
             {                
-                basketToUpdate.Items[index].Count -= item.Count;
+                basketToUpdate.Items[index].Count -= 1;
             }
             else
             {
-                success = basketToUpdate.Items.Remove(item);
+                success = basketToUpdate.Items.Remove(existingItem);
+                if (success)
+                {
+                    _context.Remove(existingItem);
+                }
             }            
 
             _context.SaveChanges();

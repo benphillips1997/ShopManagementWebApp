@@ -1,29 +1,29 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../modules/authProvider";
-import Navbar from "../modules/navBar";
+import Navbar from "../modules/navbar";
 
 function Dashboard() {
-    // const user = useLoaderData();
     const user = useAuth()?.user;
     
     return (
     <>
         <Navbar />
         <div className="core">
+            <h1 style={{textAlign: "center"}}>Logged in as {user ? user?.firstName : "guest"}</h1>
             <DashboardContainer>
                 <DashboardItem to="/products">
                     <p>Products</p>
                 </DashboardItem>
-                {user?.userType !== 3 && <>
-                    <DashboardItem to="/orders">
-                        <p>Orders</p>
-                    </DashboardItem>
+                {user && <>
+                <DashboardItem to="/orders">
+                    <p>Orders</p>
+                </DashboardItem>
                 </>}
                 {user?.userType === 1 && <>
-                    <DashboardItem to="/users">
-                        <p>Users</p>
-                    </DashboardItem>
+                <DashboardItem to="/users">
+                    <p>Users</p>
+                </DashboardItem>
                 </>}                
             </DashboardContainer>
         </div>

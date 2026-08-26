@@ -11,11 +11,17 @@
         }
 
         public enum OrderStatus
+        {            
+            Delivered = 0,
+            Returned = 1,
+            Cancelled = 2
+        }
+
+        public enum PaymentStatus
         {
             Failed = 0,
             Pending = 1,
-            Successful = 2,
-            Delivered = 3
+            Successful = 2
         }
     }
 }

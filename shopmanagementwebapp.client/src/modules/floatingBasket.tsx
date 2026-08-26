@@ -3,6 +3,7 @@ import type { Basket, BasketItem, User } from "../interfaces";
 import { useEffect, useState } from "react";
 import Loader from "./loader";
 import type { AuthContextType } from "./authProvider";
+import { Link } from "react-router-dom";
 
 interface FloatingBasketProps {
     width?: number;
@@ -72,7 +73,7 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
                         <p>{item.product.description}</p>
                         <img src={item.product.imageSource} alt={`Image of ${item.product.name}`} />
                         <p>£{item.product.cost.toFixed(2)}</p>
-                        <p>{item.count}</p>
+                        <p>Count: {item.count}</p>
                         <RemoveFromBasketButton onClick={() => removeFromBasket(item)}>
                             Remove from basket
                         </RemoveFromBasketButton>
@@ -81,7 +82,7 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
                 </ScrollableItems>
                 <BasketBottom>
                     <TotalCost>Total: £{user.basket?.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2)}</TotalCost>
-                    <CheckoutButton>Checkout</CheckoutButton>
+                    <Link to='/checkout'><CheckoutButton>Checkout</CheckoutButton></Link>
                 </BasketBottom>
             </> : <Loader visible={loading} />}
         </BasketContainer>
@@ -113,7 +114,7 @@ const ScrollableItems = styled.div`
 `
 
 const Item = styled.div`
-    border: 1px solid black;
+    border: 2px solid #19314E;
     margin: 20px;
     border-radius: 25px;
     padding: 10px;

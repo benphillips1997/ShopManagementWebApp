@@ -7,13 +7,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen:api": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 openapi-typescript https://localhost:7031/openapi/v1.json -o src/api/schema.d.ts"
   },
   "dependencies": {
+    "openapi-fetch": "^0.17.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-loader-spinner": "^8.0.2",
     "react-router-dom": "^7.18.2",
+    "react-tabs": "^6.1.1",
     "styled-components": "^6.5.3"
   },
   "devDependencies": {
@@ -22,11 +25,13 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
+    "cross-env": "^10.1.0",
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
-    "typescript": "~6.0.2",
+    "openapi-typescript": "^7.13.0",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.65.0",
     "vite": "^8.2.0"
   }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
 
@@ -13,10 +14,10 @@ namespace ShopManagementWebApp.Server.Services
             _context = context;
         }
 
-        public UserLoginResponse Login(User user)
+        public UserLoginResponse Login(LoginRequest request)
         {
             var foundUser = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product)
-                .Include(u => u.Orders).FirstOrDefault(x => x.Email == user.Email);
+                .Include(u => u.Orders).FirstOrDefault(x => x.Email == request.Email);
 
             var response = new UserLoginResponse()
             {
@@ -31,13 +32,16 @@ namespace ShopManagementWebApp.Server.Services
                 return response;
             }
 
-            if (foundUser.Password !=  user.Password)
+            bool passwordMatch = VerifyPassword(ref foundUser, foundUser.Password, request.Password);
+
+            if (!passwordMatch)
             {
                 response.Success = false;
                 response.ErrorMessage = "Incorrect password";
             }
 
             response.User = foundUser;
+            response.User.Password = string.Empty;
 
             return response;
         }
@@ -63,27 +67,64 @@ namespace ShopManagementWebApp.Server.Services
                 return false;
             }
 
+            user.Password = HashPassword(user, user.Password);
+
             _context.Users.Add(user);
             _context.SaveChanges();
 
             return true;
         }
 
-        public bool UpdateUser(User user)
+        public bool UpdateUser(UpdateUserRequest requestDetails)
         {
-            if (user == null) { return false; }
+            if (requestDetails == null || requestDetails.User == null) { return false; }
 
-            var userToUpdate = _context.Users.FirstOrDefault(x => x.Id == user.Id);
+            var userToUpdate = _context.Users.FirstOrDefault(x => x.Id == requestDetails.User.Id);
 
             if (userToUpdate == null) { return false; }
 
-            userToUpdate.Email = user.Email;
-            userToUpdate.Password = user.Password;
-            userToUpdate.FirstName = user.FirstName;
-            userToUpdate.LastName = user.LastName;
-            userToUpdate.Address = user.Address;
-            userToUpdate.Country = user.Country;
-            userToUpdate.Phone = user.Phone;
+            if (!string.IsNullOrEmpty(requestDetails.NewPassword) && !string.IsNullOrEmpty(requestDetails.CurrentPassword))
+            {
+                bool passwordMatch = VerifyPassword(ref userToUpdate, userToUpdate.Password, requestDetails.CurrentPassword);
+                if (passwordMatch)
+                {
+                    userToUpdate.Password = HashPassword(requestDetails.User, requestDetails.NewPassword);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            if (requestDetails.NewEmail != null)
+            {
+                userToUpdate.Email = requestDetails.NewEmail;
+            }
+
+            if (requestDetails.NewFirstName != null)
+            {
+                userToUpdate.FirstName = requestDetails.NewFirstName;
+            }
+
+            if (requestDetails.NewLastName != null)
+            {
+                userToUpdate.LastName = requestDetails.NewLastName;
+            }
+
+            if (requestDetails.NewAddress != null)
+            {
+                userToUpdate.Address = requestDetails.NewAddress;
+            }
+
+            if (requestDetails.NewCountry != null)
+            {
+                userToUpdate.Country = requestDetails.NewCountry;
+            }
+
+            if (requestDetails.NewPhone != null)
+            {
+                userToUpdate.Phone = requestDetails.NewPhone;
+            }
 
             _context.SaveChanges();
 
@@ -100,6 +141,37 @@ namespace ShopManagementWebApp.Server.Services
             _context.SaveChanges();
 
             return true;
+        }
+
+        private string HashPassword(User user, string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new Exception("Password does not contain any characters");
+            }
+
+            var hasher = new PasswordHasher<User>();
+            string hash = hasher.HashPassword(user, password);
+
+            return hash;
+        }
+
+        private bool VerifyPassword(ref User user, string hashedPassword, string providedPassword)
+        {
+            if (String.IsNullOrEmpty(providedPassword)) { return false; }
+
+            var hasher = new PasswordHasher<User>();
+            PasswordVerificationResult result = hasher.VerifyHashedPassword(user, hashedPassword, providedPassword);
+
+            if (result == PasswordVerificationResult.SuccessRehashNeeded)
+            {
+                string newHash = HashPassword(user, providedPassword);
+                user.Password = newHash;
+                _context.SaveChanges();
+                return true;
+            }
+
+            return result == PasswordVerificationResult.Success;
         }
     }
 }

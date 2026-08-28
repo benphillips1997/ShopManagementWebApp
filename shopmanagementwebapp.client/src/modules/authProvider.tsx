@@ -1,7 +1,5 @@
 import { createContext, useContext, useState, type Dispatch, type SetStateAction } from "react";
-import type { User, UserLoginResponse } from "../interfaces";
-import { redirect, useNavigate } from "react-router-dom";
-import ErrorMessage from "./errorMessage";
+import type { User } from "../api/interfaces";
 
 export interface AuthContextType {
     user: User | null;

@@ -11,17 +11,16 @@ import Orders from './pages/orders.tsx';
 import Order from './pages/order.tsx';
 import Checkout from './pages/checkout.tsx';
 import Payment from './pages/payment.tsx';
+import Settings from './pages/settings.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    // loader: loader,
     ErrorBoundary: Error,
     Component: Dashboard
   },
   {
     path: '/products',
-    // loader: loader,
     Component: Products
   },
   { 
@@ -49,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: '/payment',
     Component: Payment
+  },
+  {
+    path: '/settings',
+    Component: Settings
   }
 ]);
 

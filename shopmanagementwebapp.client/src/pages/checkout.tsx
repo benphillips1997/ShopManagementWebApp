@@ -3,8 +3,9 @@ import { useAuth } from "../modules/authProvider";
 import Navbar from "../modules/navbar";
 import Loader from "../modules/loader";
 import styled from "styled-components";
-import type { BasketItem } from "../interfaces";
 import { Link, redirect } from "react-router-dom";
+import type { BasketItem } from "../api/interfaces";
+import { api } from "../api/client";
 
 
 function Checkout() {
@@ -17,39 +18,33 @@ function Checkout() {
     }
 
     const removeFromBasket = (basketItem: BasketItem) => {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(basketItem)
-        }
 
-        fetch(`/api/RemoveItemFromBasket/${user?.basket?.id}`, requestOptions).then(async response => {
-            if (response.ok) {
-                const success = await response.json();
-                if (success) {
-                    console.log("Removed item from basket");
-                    const items = user?.basket?.items ?? [];
-                    const index = items.findIndex(i => i.product.id === basketItem.product.id);
-                    if (items[index].count > 1) {
-                        items[index].count -= 1;
-                        if (user) {
-                            auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
-                        }
-                        else {
-                            throw Error("Cannot identify user");
-                        }
-                    }
-                    else {
-                        const newItems = items.filter(i => i.product.id !== basketItem.product.id);
-                        if (user) {
-                            auth?.setUser({...user, basket: {...user.basket, items: [...newItems]}});
-                        }
-                        else {
-                            throw Error("Cannot identify user");
-                        }
-                    }
-                }              
+        api.POST("/api/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: user?.basket?.id! } },  body: basketItem }).then(response => {
+            if (!response.data || response.error) {
+                throw Error("Error while removing from basket");
             }
+
+            console.log("Removed item from basket");
+            const items = user?.basket?.items ?? [];
+            const index = items.findIndex(i => i.product.id === basketItem.product.id);
+            if (items[index].count > 1) {
+                items[index].count -= 1;
+                if (user) {
+                    auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
+                }
+                else {
+                    throw Error("Cannot identify user");
+                }
+            }
+            else {
+                const newItems = items.filter(i => i.product.id !== basketItem.product.id);
+                if (user) {
+                    auth?.setUser({...user, basket: {...user.basket, items: [...newItems]}});
+                }
+                else {
+                    throw Error("Cannot identify user");
+                }        
+            }                        
         }).catch(error => {
             console.error('Error removing item from basket: ', error)
         });
@@ -65,7 +60,7 @@ function Checkout() {
                     <Item key={key} className="center-column">
                         <p>{item.product.name}</p>
                         <p>{item.product.description}</p>
-                        <img src={item.product.imageSource} alt={`Image of ${item.product.name}`} />
+                        <img src={item.product.imageSource ?? ""} alt={`Image of ${item.product.name}`} />
                         <p>£{item.product.cost.toFixed(2)}</p>
                         <p>Count: {item.count}</p>
                         <RemoveFromBasketButton onClick={() => removeFromBasket(item)}>

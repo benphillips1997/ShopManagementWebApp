@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../modules/authProvider";
 import ErrorMessage from "../modules/errorMessage";
-import type { User, UserLoginResponse } from "../interfaces";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
+import { api } from "../api/client";
 
 
 function Login() {
@@ -13,25 +13,15 @@ function Login() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    if (auth?.user) {
-        navigate("/");
-    }
-
     const login = () => {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: input.email, password: input.password } as User)
-        };
-
-        fetch('/api/Login', requestOptions).then(async response => {
-            const data: UserLoginResponse = await response.json();
-            if (data.success) {
-                auth?.setUser(data.user);
+        api.POST("/api/Login", { body: { email: input.email, password: input.password } }).then(response => {
+            if (!response.error && response.data.success) {
+                auth?.setUser(response.data.user!);
+                navigate("/");
             }
             else {
-                throw Error(data.errorMessage);
-            }                      
+                throw Error(response.data.errorMessage ?? "Unknown error");
+            }
         }).catch(error => {
             console.error('Login error: ', error);
             setError(error);

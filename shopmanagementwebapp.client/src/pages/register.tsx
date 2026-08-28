@@ -1,9 +1,10 @@
 import { useState } from "react";
 import ErrorMessage from "../modules/errorMessage";
-import type { User } from "../interfaces";
 import { redirect, useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
+import { api } from "../api/client";
+import type { User } from "../api/interfaces";
 
 function Register() {
     const [formData, setFormData] = useState(
@@ -13,15 +14,8 @@ function Register() {
     const [error, setError] = useState<string>();
 
     const register = () => {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData as User)
-        };
-
-        fetch('/api/AddUser', requestOptions).then(async response => {
-            const data = await response.json();
-            if (!!data) {
+        api.POST("/api/AddUser", { body: { ...formData, userType: 0, basket: { items: [] }, orders: [] }}).then(response => {            
+            if (response.data) {
                 navigation('/login');
             }
             else {

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import type { BasketItem, Product } from "../interfaces";
 import styled from "styled-components";
 import Loader from "../modules/loader";
 import FloatingBasket from "../modules/floatingBasket";
 import { useAuth } from "../modules/authProvider";
 import Navbar from "../modules/navbar";
 import ErrorMessage from "../modules/errorMessage";
+import { api } from "../api/client";
+import type { BasketItem, Product } from "../api/interfaces";
 
 function Products() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -20,22 +21,13 @@ function Products() {
 
     const loadProducts = async () => {
         setLoading(true);
-        try {
-            const response = await fetch('/api/GetProducts');
-            if (response.ok) {
-                const data = await response.json();
-                setProducts(data);
-            }
-            else {
-                console.log("Response not okay");
-            }
-        }
-        catch(error) {
-            console.log(error);
-        }
-        finally {
-            setLoading(false);
-        }
+
+        api.GET("/api/GetProducts").then(response => {
+            const data = response.data;
+            setProducts(data ?? []);
+        })
+        .catch(error => console.log(error))
+        .finally(() => setLoading(false))
     }
 
     const addToBasket = (product: Product, key: number) => {
@@ -51,34 +43,25 @@ function Products() {
             count: 1
         }
 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(basketItem)
-        }
-
-        fetch(`/api/AddItemToBasket/${user?.basket?.id}`, requestOptions).then(async response => {
-                if (response.ok) {
-                    const success = await response.json();
-                    if (success) {
-                        console.log("Item added to basket");
-                        const items = user.basket?.items ?? [];
-                        const index = items.findIndex(i => i.product.id === product.id);
-                        if (index !== -1) {
-                            items[index].count += 1;
-                            auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
-                        }
-                        else {
-                            auth?.setUser({...user, basket: {...user.basket, items: [...items, basketItem]}});
-                        }                        
-                    }
+        api.POST("/api/AddItemToBasket/{basketId}", { params: { path: { basketId: user.basket.id! }}, body: basketItem }).then(response => {
+            if (response.data) {
+                console.log("Item added to basket");
+                const items = user.basket?.items ?? [];
+                const index = items.findIndex(i => i.product.id === product.id);
+                if (index !== -1) {
+                    items[index].count += 1;
+                    auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
                 }
                 else {
-                    console.log("Response not okay");
-                }
-            }).catch(error => {
-                console.log(error)
-            });
+                    auth?.setUser({...user, basket: {...user.basket, items: [...items, basketItem]}});
+                }                        
+            }                
+            else {
+                console.log("Response not okay");
+            }
+        }).catch(error => {
+            console.log(error)
+        });
     }
 
     return (
@@ -90,7 +73,7 @@ function Products() {
                     <GridItem key={key}>
                         <p>{product.name}</p>
                         <p>{product.description ?? ""}</p>
-                        <img src={product.imageSource} alt={`Image of ${product.name}`} />
+                        <img src={product.imageSource ?? undefined} alt={`Image of ${product.name}`} />
                         <p>£{product.cost.toFixed(2)}</p>
                         <AddToBasketButton onClick={() => addToBasket(product, key)}>
                             Add to basket

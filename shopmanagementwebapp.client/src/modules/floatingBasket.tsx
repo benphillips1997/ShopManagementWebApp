@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import type { Basket, BasketItem, User } from "../interfaces";
 import { useEffect, useState } from "react";
 import Loader from "./loader";
 import type { AuthContextType } from "./authProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import type { BasketItem, User } from "../api/interfaces";
+import { api } from "../api/client";
 
 interface FloatingBasketProps {
     width?: number;
@@ -13,6 +14,7 @@ interface FloatingBasketProps {
 
 function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
     const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         //loadBasketItems();
@@ -35,29 +37,23 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
     // };
 
     const removeFromBasket = (basketItem: BasketItem) => {
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(basketItem)
-        }
-
-        fetch(`/api/RemoveItemFromBasket/${user.basket?.id}`, requestOptions).then(async response => {
-            if (response.ok) {
-                const success = await response.json();
-                if (success) {
-                    console.log("Removed item from basket");
-                    const items = user.basket?.items ?? [];
-                    const index = items.findIndex(i => i.product.id === basketItem.product.id);
-                    if (items[index].count > 1) {
-                        items[index].count -= 1;
-                        auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
-                    }
-                    else {
-                        const newItems = items.filter(i => i.product.id !== basketItem.product.id);
-                        auth?.setUser({...user, basket: {...user.basket, items: [...newItems]}});
-                    }
-                }              
+        api.POST("/api/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: user.basket.id! }}, body: basketItem }).then(response => {
+            if (response.data) {
+                console.log("Removed item from basket");
+                const items = user.basket?.items ?? [];
+                const index = items.findIndex(i => i.product.id === basketItem.product.id);
+                if (items[index].count > 1) {
+                    items[index].count -= 1;
+                    auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
+                }
+                else {
+                    const newItems = items.filter(i => i.product.id !== basketItem.product.id);
+                    auth?.setUser({...user, basket: {...user.basket, items: [...newItems]}});
+                }
             }
+            else {
+                throw Error("Error removing from basket");
+            }            
         }).catch(error => {
             console.error('Error removing item from basket: ', error)
         });
@@ -67,11 +63,11 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
         <BasketContainer width={width}>
             {!loading ? <>
                 <ScrollableItems>
-                {user.basket?.items.map((item, key) =>
+                {user.basket?.items && user.basket.items.map((item, key) =>
                     <Item key={key} className="center-column">
                         <p>{item.product.name}</p>
                         <p>{item.product.description}</p>
-                        <img src={item.product.imageSource} alt={`Image of ${item.product.name}`} />
+                        <img src={item.product.imageSource ?? undefined} alt={`Image of ${item.product.name}`} />
                         <p>£{item.product.cost.toFixed(2)}</p>
                         <p>Count: {item.count}</p>
                         <RemoveFromBasketButton onClick={() => removeFromBasket(item)}>
@@ -81,8 +77,8 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
                 )}
                 </ScrollableItems>
                 <BasketBottom>
-                    <TotalCost>Total: £{user.basket?.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2)}</TotalCost>
-                    <Link to='/checkout'><CheckoutButton>Checkout</CheckoutButton></Link>
+                    <TotalCost>Total: £{user.basket.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2)}</TotalCost>
+                    <CheckoutButton onClick={() => navigate("/checkout")} disabled={user.basket.items.length === 0}>Checkout</CheckoutButton>
                 </BasketBottom>
             </> : <Loader visible={loading} />}
         </BasketContainer>
@@ -149,5 +145,5 @@ const CheckoutButton = styled.button`
     color: white;
     font-size: 20px;
     padding: 5px 24px 5px 24px;
-    border-radius: 8px;
+    border-radius: 8px;    
 `

@@ -8,8 +8,8 @@ namespace ShopManagementWebApp.Server.Services
         List<User> GetUsers();
         User? GetUser(int id);
         bool AddUser(User user);
-        bool UpdateUser(User user);
+        bool UpdateUser(UpdateUserRequest requestDetails);
         bool DeleteUser(int id);
-        UserLoginResponse Login(User user);
+        UserLoginResponse Login(LoginRequest request);
     }
 }

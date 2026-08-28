@@ -14,7 +14,9 @@
         {            
             Delivered = 0,
             Returned = 1,
-            Cancelled = 2
+            Cancelled = 2,
+            Shipped = 3,
+            Refunded = 4
         }
 
         public enum PaymentStatus

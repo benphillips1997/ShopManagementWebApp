@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Order } from "../interfaces";
 import { useAuth } from "../modules/authProvider";
 import styled from "styled-components";
 import Navbar from "../modules/navbar";
+import type { Order } from "../api/interfaces";
 
 function Orders() {
     const auth = useAuth();
@@ -25,7 +25,7 @@ function Orders() {
         <div className="center">
             {!!auth?.user?.orders && auth?.user?.orders?.map((order, key) => 
                 <OrderContainer className="center-column">
-                    <p>{order.orderDate.toDateString()}</p>
+                    <p>{order.orderDate}</p>
                     <p>{order.orderStatus}</p>
                     <p>{order.orderAddress}</p>
                     {order.items && order.items.map((item, key) => 

@@ -20,9 +20,9 @@ namespace ShopManagementWebApp.Server.Controllers
         }
 
         [HttpPost("/api/Login")]
-        public UserLoginResponse Login([FromBody] User user)
+        public UserLoginResponse Login([FromBody] LoginRequest request)
         {
-            return _service.Login(user);
+            return _service.Login(request);
         }
 
         [HttpGet("/api/GetUsers")]
@@ -44,9 +44,9 @@ namespace ShopManagementWebApp.Server.Controllers
         }
 
         [HttpPost("/api/UpdateUser")]
-        public bool UpdateUser(User user)
+        public bool UpdateUser([FromBody] UpdateUserRequest requestDetails)
         {
-            return _service.UpdateUser(user);
+            return _service.UpdateUser(requestDetails);
         }
 
         [HttpDelete("/api/DeleteUser")]

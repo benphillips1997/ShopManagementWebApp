@@ -9,42 +9,42 @@ namespace ShopManagementWebApp.Server.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ShopManagementDbContext _context;
-        private readonly IProductService _service;
+        private readonly IProductService _productService;
 
         public ProductController(ShopManagementDbContext context, IProductService productService) 
         {
             _context = context;
-            _service = productService;
+            _productService = productService;
         }
 
         [HttpGet("/api/GetProducts")]
         public IEnumerable<Product> GetProducts()
         {
-            return _service.GetProducts();
+            return _productService.GetProducts();
         }
 
         [HttpGet("/api/GetProduct/{id}")]
         public Product? GetProduct(int id)
         {
-            return _service.GetProduct(id);
+            return _productService.GetProduct(id);
         }
 
         [HttpPost("/api/AddProduct")]
         public bool AddProduct([FromBody] Product product)
         {
-            return _service.AddProduct(product);
+            return _productService.AddProduct(product);
         }
 
         [HttpPost("/api/UpdateProduct")]
         public bool UpdateProduct([FromBody] Product product)
         {
-            return _service.UpdateProduct(product);
+            return _productService.UpdateProduct(product);
         }
 
         [HttpDelete("/api/DeleteProduct/{id}")]
         public bool DeleteProduct(int id)
         {
-            return _service.DeleteProduct(id);
+            return _productService.DeleteProduct(id);
         }
     }
 }

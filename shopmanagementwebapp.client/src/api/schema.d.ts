@@ -248,7 +248,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/AddOrder": {
+    "/api/CreateOrder": {
         parameters: {
             query?: never;
             header?: never;
@@ -281,6 +281,49 @@ export interface paths {
                         "text/plain": boolean;
                         "application/json": boolean;
                         "text/json": boolean;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/MakePayment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PaymentRequestDto"];
+                    "text/json": components["schemas"]["PaymentRequestDto"];
+                    "application/*+json": components["schemas"]["PaymentRequestDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PaymentResponseDto"];
+                        "application/json": components["schemas"]["PaymentResponseDto"];
+                        "text/json": components["schemas"]["PaymentResponseDto"];
                     };
                 };
             };
@@ -847,7 +890,9 @@ export interface components {
             /** Format: date-time */
             orderDate: string;
             orderStatus: components["schemas"]["OrderStatus"];
+            paymentStatus: components["schemas"]["PaymentStatus"];
             orderAddress: string;
+            orderCountry: string;
             user: components["schemas"]["User"];
         };
         OrderItem: {
@@ -860,6 +905,12 @@ export interface components {
             costAtPurchase: number;
         };
         OrderStatus: number;
+        PaymentRequestDto: Record<string, never>;
+        PaymentResponseDto: {
+            success: boolean;
+            errorMessage?: null | string;
+        };
+        PaymentStatus: number;
         Product: {
             /** Format: int32 */
             id?: null | number;
@@ -872,7 +923,8 @@ export interface components {
             stock: number;
         };
         UpdateUserRequest: {
-            user: components["schemas"]["User"];
+            /** Format: int32 */
+            userId: number;
             newEmail?: null | string;
             currentPassword?: null | string;
             newPassword?: null | string;

@@ -1,10 +1,9 @@
 import { useState } from "react";
 import ErrorMessage from "../modules/errorMessage";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
 import { api } from "../api/client";
-import type { User } from "../api/interfaces";
 
 function Register() {
     const [formData, setFormData] = useState(
@@ -52,7 +51,7 @@ function Register() {
                 <br />
                 <label htmlFor="firstName">First name:</label>
                 <input 
-                    type="firstName" 
+                    type="text" 
                     id="firstName" 
                     name="firstName" 
                     required 
@@ -61,7 +60,7 @@ function Register() {
                 <br />
                 <label htmlFor="lastName">Last name:</label>
                 <input 
-                    type="lastName" 
+                    type="text" 
                     id="lastName" 
                     name="lastName" 
                     required 
@@ -70,7 +69,7 @@ function Register() {
                 <br />
                 <label htmlFor="address">Address:</label>
                 <input 
-                    type="address" 
+                    type="text" 
                     id="address" 
                     name="address" 
                     required 
@@ -79,7 +78,7 @@ function Register() {
                 <br />
                 <label htmlFor="country">Country:</label>
                 <input 
-                    type="country" 
+                    type="text" 
                     id="country" 
                     name="country" 
                     required 
@@ -88,7 +87,7 @@ function Register() {
                 <br />
                 <label htmlFor="phone">Phone:</label>
                 <input 
-                    type="phone" 
+                    type="tel" 
                     id="phone" 
                     name="phone" 
                     required 

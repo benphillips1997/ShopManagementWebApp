@@ -11,19 +11,22 @@
         }
 
         public enum OrderStatus
-        {            
-            Delivered = 0,
-            Returned = 1,
-            Cancelled = 2,
-            Shipped = 3,
-            Refunded = 4
+        {
+            NotSet = 0,
+            Cancelled = 1,
+            Processing = 2,
+            Confirmed = 3,
+            Shipped = 4,
+            Returned = 5
         }
 
         public enum PaymentStatus
         {
-            Failed = 0,
-            Pending = 1,
-            Successful = 2
+            NotSet = 0,
+            Failed = 1,
+            Pending = 2,
+            Successful = 3,
+            Refunded = 4
         }
     }
 }

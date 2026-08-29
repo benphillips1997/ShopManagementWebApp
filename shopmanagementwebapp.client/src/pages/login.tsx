@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
 import { api } from "../api/client";
+import Loader from "../modules/loader";
 
 
 function Login() {
@@ -12,8 +13,10 @@ function Login() {
     const auth = useAuth();
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [loggingIn, setLoggingIn] = useState(false);
 
     const login = () => {
+        setLoggingIn(true);
         api.POST("/api/Login", { body: { email: input.email, password: input.password } }).then(response => {
             if (!response.error && response.data.success) {
                 auth?.setUser(response.data.user!);
@@ -25,13 +28,14 @@ function Login() {
         }).catch(error => {
             console.error('Login error: ', error);
             setError(error);
-        })
+        }).finally(() => setLoggingIn(false))
     }    
 
     return (
         <>
         <Navbar />
         <FormDiv>
+            {!loggingIn ?
             <FormContainer action={() => login()}>
                 <label htmlFor="email">Email:</label>
                 <input 
@@ -61,6 +65,7 @@ function Login() {
                 <br />
                 {!!error && <ErrorMessage message={error} />}
             </FormContainer>
+            : <Loader visible={loggingIn} />}
         </FormDiv>
         </>
     );

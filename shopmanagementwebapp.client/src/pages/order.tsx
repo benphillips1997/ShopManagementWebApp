@@ -15,7 +15,7 @@ function Order() {
             <p>{order?.orderDate}</p>
             <p>{order?.orderStatus}</p>
             <p>{order?.orderAddress}</p>
-            {order?.items && order?.items.map((item, key) => 
+            {order?.items && order?.items.map((item) => 
                 <p>{item.count} {item.product.name} - £{item.costAtPurchase}</p>
             )}
             <p>£{order?.totalCost}</p>

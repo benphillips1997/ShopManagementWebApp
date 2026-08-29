@@ -7,7 +7,9 @@
         public double TotalCost { get; set; }
         public DateTime OrderDate { get; set; }
         public Enums.OrderStatus OrderStatus { get; set; }
+        public Enums.PaymentStatus PaymentStatus { get; set; }
         public required string OrderAddress { get; set; }
+        public required string OrderCountry { get; set; }
         public required User User { get; set; }
     }
 }

@@ -10,36 +10,36 @@ namespace ShopManagementWebApp.Server.Controllers
     public class BasketController : ControllerBase
     {
         private readonly ShopManagementDbContext _context;
-        private readonly IBasketService _service;
+        private readonly IBasketService _basketService;
 
         public BasketController(ShopManagementDbContext context, IBasketService basketService)
         {
             _context = context;
-            _service = basketService;
+            _basketService = basketService;
         }
 
         [HttpGet("/api/GetBasket/{userId}")]
         public Basket? GetBasket(int userId)
         {
-            return _service.GetBasket(userId);
+            return _basketService.GetBasket(userId);
         }
 
         [HttpPost("/api/AddItemToBasket/{basketId}")]
         public bool AddItemToBasket(int basketId, [FromBody] BasketItem item)
         {
-            return _service.AddItemToBasket(basketId, item);
+            return _basketService.AddItemToBasket(basketId, item);
         }
 
         [HttpPost("/api/RemoveItemFromBasket/{basketId}")]
         public bool RemoveItemFromBasket(int basketId, [FromBody] BasketItem item)
         {
-            return _service.DeleteItemFromBasket(basketId, item);
+            return _basketService.DeleteItemFromBasket(basketId, item);
         }
 
         [HttpDelete("/api/ClearBasket/{basketId}")]
         public bool ClearBasket(int basketId)
         {
-            return _service.ClearBasket(basketId);
+            return _basketService.ClearBasket(basketId);
         }
     }
 }

@@ -11,48 +11,48 @@ namespace ShopManagementWebApp.Server.Controllers
     public class UserController : ControllerBase
     {
         private readonly ShopManagementDbContext _context;
-        private readonly IUserService _service;
+        private readonly IUserService _userService;
 
         public UserController(ShopManagementDbContext context, IUserService userService)
         {
             _context = context;
-            _service = userService;
+            _userService = userService;
         }
 
         [HttpPost("/api/Login")]
         public UserLoginResponse Login([FromBody] LoginRequest request)
         {
-            return _service.Login(request);
+            return _userService.Login(request);
         }
 
         [HttpGet("/api/GetUsers")]
         public IEnumerable<User> GetUsers()
         {
-            return _service.GetUsers();
+            return _userService.GetUsers();
         }
 
         [HttpGet("/api/GetUser/{id}")]
         public User? GetUser(int id)
         {
-            return _service.GetUser(id);
+            return _userService.GetUser(id);
         }
 
         [HttpPost("/api/AddUser")]
         public bool AddUser([FromBody] User user)
         {
-            return _service.AddUser(user);
+            return _userService.AddUser(user);
         }
 
         [HttpPost("/api/UpdateUser")]
         public bool UpdateUser([FromBody] UpdateUserRequest requestDetails)
         {
-            return _service.UpdateUser(requestDetails);
+            return _userService.UpdateUser(requestDetails);
         }
 
         [HttpDelete("/api/DeleteUser")]
         public bool DeleteUser(int id)
         {
-            return _service.DeleteUser(id);
+            return _userService.DeleteUser(id);
         }
     }
 }

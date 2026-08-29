@@ -16,26 +16,6 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        //loadBasketItems();
-    }, []);
-
-    // const loadBasketItems = () => {
-    //     setLoading(true);
-    //         fetch(`/api/GetBasket/${user.id}`).then(async response => {
-    //             if (response.ok) {
-    //                 console.log(response)
-    //                 const data = await response.json();
-    //                 setBasket(data);
-    //                 console.log(data)
-    //             }
-    //         }).catch(error => {
-    //             console.error('Error loading basket items: ', error)
-    //         }).finally(() => {
-    //             setLoading(false);
-    //         });
-    // };
-
     const removeFromBasket = (basketItem: BasketItem) => {
         api.POST("/api/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: user.basket.id! }}, body: basketItem }).then(response => {
             if (response.data) {

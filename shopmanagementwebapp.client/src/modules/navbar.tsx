@@ -16,9 +16,10 @@ function Navbar() {
             <NavbarNav>
                 <NavbarLink to="/">Dashboard</NavbarLink>
                 <NavbarLink to="/products">Products</NavbarLink>
-                {auth?.user &&
+                {auth?.user && <>
                 <NavbarLink to="/orders">Orders</NavbarLink>
-                }
+                <NavbarLink to="/settings">Settings</NavbarLink>
+                </> }
                 <Spacer />
                 {!auth?.user ? <>
                 <NavbarLink to="/login">Login</NavbarLink>
@@ -87,6 +88,7 @@ const NavbarButton = styled.button`
     background-color: #5250c2;
     border-radius: 5px;
     font-size: 18px;
+    color: white;
 
     &:hover {
         

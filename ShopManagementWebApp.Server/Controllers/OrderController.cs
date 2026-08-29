@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
 using ShopManagementWebApp.Server.Services;
 
@@ -10,42 +11,50 @@ namespace ShopManagementWebApp.Server.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ShopManagementDbContext _context;
-        private readonly IOrderService _service;
+        private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
 
-        public OrderController(ShopManagementDbContext context, IOrderService orderService)
+        public OrderController(ShopManagementDbContext context, IOrderService orderService, IPaymentService paymentService)
         {
             _context = context;
-            _service = orderService;
+            _orderService = orderService;
+            _paymentService = paymentService;
         }
 
         [HttpGet("/api/GetOrders")]
         public IEnumerable<Order> GetOrders()
         {
-            return _service.GetOrders();
+            return _orderService.GetOrders();
         }
 
         [HttpGet("/api/GetOrder/{id}")]
         public Order? GetOrder(int id)
         {
-            return _service.GetOrder(id);
+            return _orderService.GetOrder(id);
         }
 
-        [HttpPost("/api/AddOrder")]
-        public bool AddOrder([FromBody] Order order)
+        [HttpPost("/api/CreateOrder")]
+        public bool CreateOrder([FromBody] Order order)
         {
-            return _service.AddOrder(order);
+            return _orderService.CreateOrder(order);
+        }
+
+        [HttpPost("/api/MakePayment")]
+        public PaymentResponseDto MakePayment(PaymentRequestDto paymentRequest)
+        {
+            return _paymentService.ProcessPayment(paymentRequest);
         }
 
         [HttpPost("/api/UpdateOrder")]
         public bool UpdateOrder([FromBody] Order order)
         {
-            return _service.UpdateOrder(order);
+            return _orderService.UpdateOrder(order);
         }
 
         [HttpDelete("/api/DeleteOrder/{id}")]
         public bool DeleteOrder(int id)
         {
-            return _service.DeleteOrder(id);
+            return _orderService.DeleteOrder(id);
         }
     }
 }

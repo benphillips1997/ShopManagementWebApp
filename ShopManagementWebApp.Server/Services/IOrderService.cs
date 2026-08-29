@@ -6,7 +6,7 @@ namespace ShopManagementWebApp.Server.Services
     {
         List<Order> GetOrders(int userId = -1);
         Order? GetOrder(int id);
-        bool AddOrder(Order order);
+        bool CreateOrder(Order order);
         bool UpdateOrder(Order order);
         bool DeleteOrder(int id);
     }

@@ -77,9 +77,9 @@ namespace ShopManagementWebApp.Server.Services
 
         public bool UpdateUser(UpdateUserRequest requestDetails)
         {
-            if (requestDetails == null || requestDetails.User == null) { return false; }
+            if (requestDetails == null) { return false; }
 
-            var userToUpdate = _context.Users.FirstOrDefault(x => x.Id == requestDetails.User.Id);
+            var userToUpdate = _context.Users.FirstOrDefault(x => x.Id == requestDetails.UserId);
 
             if (userToUpdate == null) { return false; }
 
@@ -88,7 +88,7 @@ namespace ShopManagementWebApp.Server.Services
                 bool passwordMatch = VerifyPassword(ref userToUpdate, userToUpdate.Password, requestDetails.CurrentPassword);
                 if (passwordMatch)
                 {
-                    userToUpdate.Password = HashPassword(requestDetails.User, requestDetails.NewPassword);
+                    userToUpdate.Password = HashPassword(userToUpdate, requestDetails.NewPassword);
                 }
                 else
                 {

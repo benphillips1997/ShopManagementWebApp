@@ -4,7 +4,7 @@ namespace ShopManagementWebApp.Server.Dtos
 {
     public class UpdateUserRequest
     {
-        public required User User { get; set; }
+        public int UserId { get; set; }
         public string? NewEmail { get; set; }
         public string? CurrentPassword { get; set; }
         public string? NewPassword { get; set; }

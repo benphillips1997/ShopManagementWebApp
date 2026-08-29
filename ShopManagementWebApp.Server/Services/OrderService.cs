@@ -22,7 +22,7 @@ namespace ShopManagementWebApp.Server.Services
             return _context.Orders.FirstOrDefault(x => x.Id == id);
         }
 
-        public bool AddOrder(Order order)
+        public bool CreateOrder(Order order)
         {
             if (order == null) { return false; }
 

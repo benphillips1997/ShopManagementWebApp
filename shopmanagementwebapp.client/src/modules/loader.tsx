@@ -3,14 +3,14 @@ import { Oval } from 'react-loader-spinner';
 const defaultSize = 250;
 
 interface LoaderProps {
-    visible: boolean;
+    visible?: boolean;
     height?: number;
     width?: number;
     backgroundColor?: string;
     spinnerColor?: string;
 }
 
-function Loader({ visible, height, width, backgroundColor, spinnerColor }: LoaderProps) {
+function Loader({ visible = true, height, width, backgroundColor, spinnerColor }: LoaderProps) {
     return (
         <div className="center">
             <Oval

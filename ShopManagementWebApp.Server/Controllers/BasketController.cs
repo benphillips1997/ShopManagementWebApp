@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Models;
 using ShopManagementWebApp.Server.Services;
@@ -18,25 +19,26 @@ namespace ShopManagementWebApp.Server.Controllers
             _basketService = basketService;
         }
 
-        [HttpGet("/api/GetBasket/{userId}")]
+        [Authorize]
+        [HttpGet("GetBasket/{userId}")]
         public Basket? GetBasket(int userId)
         {
             return _basketService.GetBasket(userId);
         }
 
-        [HttpPost("/api/AddItemToBasket/{basketId}")]
+        [HttpPost("AddItemToBasket/{basketId}")]
         public bool AddItemToBasket(int basketId, [FromBody] BasketItem item)
         {
             return _basketService.AddItemToBasket(basketId, item);
         }
 
-        [HttpPost("/api/RemoveItemFromBasket/{basketId}")]
+        [HttpPost("RemoveItemFromBasket/{basketId}")]
         public bool RemoveItemFromBasket(int basketId, [FromBody] BasketItem item)
         {
             return _basketService.DeleteItemFromBasket(basketId, item);
         }
 
-        [HttpDelete("/api/ClearBasket/{basketId}")]
+        [HttpDelete("ClearBasket/{basketId}")]
         public bool ClearBasket(int basketId)
         {
             return _basketService.ClearBasket(basketId);

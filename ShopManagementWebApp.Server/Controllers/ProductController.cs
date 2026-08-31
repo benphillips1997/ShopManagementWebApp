@@ -5,7 +5,7 @@ using ShopManagementWebApp.Server.Services;
 namespace ShopManagementWebApp.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
         private readonly ShopManagementDbContext _context;
@@ -17,25 +17,25 @@ namespace ShopManagementWebApp.Server.Controllers
             _productService = productService;
         }
 
-        [HttpGet("/api/GetProducts")]
+        [HttpGet("GetProducts")]
         public IEnumerable<Product> GetProducts()
         {
             return _productService.GetProducts();
         }
 
-        [HttpGet("/api/GetProduct/{id}")]
+        [HttpGet("GetProduct/{id}")]
         public Product? GetProduct(int id)
         {
             return _productService.GetProduct(id);
         }
 
-        [HttpPost("/api/AddProduct")]
+        [HttpPost("AddProduct")]
         public bool AddProduct([FromBody] Product product)
         {
             return _productService.AddProduct(product);
         }
 
-        [HttpPost("/api/UpdateProduct")]
+        [HttpPost("UpdateProduct")]
         public bool UpdateProduct([FromBody] Product product)
         {
             return _productService.UpdateProduct(product);

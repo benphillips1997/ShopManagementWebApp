@@ -12,8 +12,9 @@ function Register() {
     const navigation = useNavigate();
     const [error, setError] = useState<string>();
 
-    const register = () => {
-        api.POST("/api/AddUser", { body: { ...formData, userType: 0, basket: { items: [] }, orders: [] }}).then(response => {            
+    const register = (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        api.POST("/api/User/AddUser", { body: { ...formData, userType: 0, basket: { items: [] }, orders: [] }}).then(response => {            
             if (response.data) {
                 navigation('/login');
             }
@@ -30,7 +31,7 @@ function Register() {
         <>
         <Navbar />
         <FormDiv>
-            <FormContainer action={() => register()} onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}>
+            <FormContainer onSubmit={register} onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}>
                 <label htmlFor="email">Email:</label>
                 <input 
                     type="email" 

@@ -6,8 +6,8 @@ function Navbar() {
     const auth = useAuth();
     const navigate = useNavigate();
 
-    const logout = () => {
-        auth?.setUser(null);
+    const logout = () => {     
+        auth?.logout();   
         navigate('/login');
     }
 

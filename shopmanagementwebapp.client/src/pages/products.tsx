@@ -6,7 +6,7 @@ import { useAuth } from "../modules/authProvider";
 import Navbar from "../modules/navbar";
 import ErrorMessage from "../modules/errorMessage";
 import { api } from "../api/client";
-import type { BasketItem, Product } from "../api/interfaces";
+import type { Basket, BasketItem, Product } from "../api/interfaces";
 
 function Products() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -14,15 +14,20 @@ function Products() {
     const auth = useAuth();
     const user = auth?.user;
     const [productError, setProductError] = useState<boolean[]>([]);
+    const [basket, setBasket] = useState<Basket>();
+    const [basketLoading, setBasketLoading] = useState(false);
 
     useEffect(() => {
         loadProducts();
-    }, []);
+        if (user) {
+            loadBasket();
+        }
+    }, [])
 
-    const loadProducts = async () => {
+    const loadProducts = () => {
         setLoading(true);
 
-        api.GET("/api/GetProducts").then(response => {
+        api.GET("/api/Product/GetProducts").then(response => {
             const data = response.data;
             setProducts(data ?? []);
         })
@@ -30,8 +35,22 @@ function Products() {
         .finally(() => setLoading(false))
     }
 
+    const loadBasket = async () => {
+        await api.GET("/api/Basket/GetBasket/{userId}", { params: { path: {userId: user?.id! }}}).then(response => {
+            if (!response.error && response.data) {
+                setBasket(response.data);
+            }
+            else {
+                throw Error("Error retrieving basket");
+            }
+        }).catch(error => {
+            console.error(error);
+        })
+    }
+
     const addToBasket = (product: Product, key: number) => {
-        if (!user?.id) {
+        setBasketLoading(true);
+        if (!basket) {
             const newArr = productError;
             newArr[key] = true;
             setProductError([...newArr]);
@@ -43,31 +62,23 @@ function Products() {
             count: 1
         }
 
-        api.POST("/api/AddItemToBasket/{basketId}", { params: { path: { basketId: user.basket.id! }}, body: basketItem }).then(response => {
+        api.POST("/api/Basket/AddItemToBasket/{basketId}", { params: { path: { basketId: basket.id! }}, body: basketItem }).then(async response => {
             if (response.data) {
                 console.log("Item added to basket");
-                const items = user.basket?.items ?? [];
-                const index = items.findIndex(i => i.product.id === product.id);
-                if (index !== -1) {
-                    items[index].count += 1;
-                    auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
-                }
-                else {
-                    auth?.setUser({...user, basket: {...user.basket, items: [...items, basketItem]}});
-                }                        
-            }                
+                await loadBasket();
+            }
             else {
                 console.log("Response not okay");
             }
         }).catch(error => {
             console.log(error)
-        });
+        }).finally(() => setBasketLoading(false))
     }
 
     return (
     <>
         <Navbar />
-        <div style={{ width: user?.id ? '80%' : '100%' }}>
+        <div style={{ width: user ? '80%' : '100%' }}>
             {!loading ? <GridContainer $length={products.length}>
                 {products && products.map((product, key) => 
                     <GridItem key={key}>
@@ -83,9 +94,9 @@ function Products() {
                 )}
             </GridContainer>
             : <Loader visible={loading} />}
-            {user?.id && <FloatingBasket width={20} user={user} auth={auth} />}
+            {basket && <FloatingBasket width={20} basket={basket} loadBasket={loadBasket} loading={basketLoading} setLoading={setBasketLoading} />}
         </div>
-    </>    
+    </>
     );
 }
 

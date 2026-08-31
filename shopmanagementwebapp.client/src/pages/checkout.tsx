@@ -1,50 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../modules/authProvider";
 import Navbar from "../modules/navbar";
 import Loader from "../modules/loader";
 import styled from "styled-components";
-import { Link, redirect } from "react-router-dom";
-import type { BasketItem } from "../api/interfaces";
+import { Link } from "react-router-dom";
+import type { Basket, BasketItem } from "../api/interfaces";
 import { api } from "../api/client";
 
 
 function Checkout() {
-    const auth = useAuth();
-    const user = auth?.user;
-    const [loading, setLoading] = useState();
+    const user = useAuth()?.user;
+    const [loading, setLoading] = useState(false);
+    const [basket, setBasket] = useState<Basket>();
 
-    if (!user) {
-        redirect("/login");
+    useEffect(() => {
+        loadBasket();
+    }, [])
+
+    const loadBasket = () => {
+        api.GET("/api/Basket/GetBasket/{userId}", { params: { path: {userId: user?.id! }}}).then(response => {
+            if (!response.error && response.data) {
+                setBasket(response.data);
+            }
+            else {
+                throw Error("Error retrieving basket");
+            }
+        }).catch(error => {
+            console.log(error);
+        })
     }
 
     const removeFromBasket = (basketItem: BasketItem) => {
+        if (!basket) {
+            console.log("Error: cannot identify basket");
+            return;
+        }
 
-        api.POST("/api/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: user?.basket?.id! } },  body: basketItem }).then(response => {
-            if (!response.data || response.error) {
-                throw Error("Error while removing from basket");
-            }
-
-            console.log("Removed item from basket");
-            const items = user?.basket?.items ?? [];
-            const index = items.findIndex(i => i.product.id === basketItem.product.id);
-            if (items[index].count > 1) {
-                items[index].count -= 1;
-                if (user) {
-                    auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
-                }
-                else {
-                    throw Error("Cannot identify user");
-                }
+        api.POST("/api/Basket/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: basket.id! }}, body: basketItem }).then(async response => {
+            if (response.data) {
+                console.log("Removed item from basket");
+                setLoading(true);
+                await loadBasket();
+                setLoading(false);
             }
             else {
-                const newItems = items.filter(i => i.product.id !== basketItem.product.id);
-                if (user) {
-                    auth?.setUser({...user, basket: {...user.basket, items: [...newItems]}});
-                }
-                else {
-                    throw Error("Cannot identify user");
-                }        
-            }                        
+                throw Error("Error removing from basket");
+            }            
         }).catch(error => {
             console.error('Error removing item from basket: ', error)
         });
@@ -55,8 +56,9 @@ function Checkout() {
         <Navbar />
         <div>
             {!loading ? <>
-                <ItemsGrid $length={user?.basket?.items.length || 0}>
-                {user?.basket?.items.map((item, key) => <>
+                {basket && basket.items.length > 0 ?
+                <ItemsGrid $length={basket.items.length || 0}>
+                {basket && basket.items.map((item, key) => <>
                     <Item key={key} className="center-column">
                         <p>{item.product.name}</p>
                         <p>{item.product.description}</p>
@@ -69,11 +71,14 @@ function Checkout() {
                     </Item>
                 </>)}
                 </ItemsGrid>
+                : <h1 className="center">No items found</h1>}
                 <BottomDiv className="center-column">
-                    <TotalCost>Total: £{user?.basket?.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2)}</TotalCost>
-                    <Link to='/payment'><CheckoutButton>Proceed to payment</CheckoutButton></Link>
+                    <TotalCost>Total: £{basket ? basket.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2) : 0}</TotalCost>
+                    <Link to={basket && basket.items.length > 0 ? '/payment' : '/products'}>
+                        <CheckoutButton>{basket && basket.items.length > 0  ? "Proceed to payment" : "Return to shop"}</CheckoutButton>
+                    </Link>
                 </BottomDiv>
-            </> : <Loader visible={loading} />}
+            </> : <Loader />}
         </div>
     </>
     );

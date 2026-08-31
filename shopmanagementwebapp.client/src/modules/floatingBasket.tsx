@@ -1,49 +1,45 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import Loader from "./loader";
-import type { AuthContextType } from "./authProvider";
-import { Link, useNavigate } from "react-router-dom";
-import type { BasketItem, User } from "../api/interfaces";
+import { useNavigate } from "react-router-dom";
+import type { Basket, BasketItem } from "../api/interfaces";
 import { api } from "../api/client";
 
 interface FloatingBasketProps {
     width?: number;
-    user: User;
-    auth: AuthContextType | null;
+    basket: Basket;
+    loadBasket: () => void;
+    loading: boolean;
+    setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
-    const [loading, setLoading] = useState<boolean>(false);
+function FloatingBasket({ width, basket, loadBasket, loading, setLoading }: FloatingBasketProps) {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        loadBasket();
+    }, [])
+
     const removeFromBasket = (basketItem: BasketItem) => {
-        api.POST("/api/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: user.basket.id! }}, body: basketItem }).then(response => {
+        setLoading(true);
+        api.POST("/api/Basket/RemoveItemFromBasket/{basketId}", { params: { path: { basketId: basket.id! }}, body: basketItem }).then(async response => {
             if (response.data) {
                 console.log("Removed item from basket");
-                const items = user.basket?.items ?? [];
-                const index = items.findIndex(i => i.product.id === basketItem.product.id);
-                if (items[index].count > 1) {
-                    items[index].count -= 1;
-                    auth?.setUser({...user, basket: {...user.basket, items: [...items]}});
-                }
-                else {
-                    const newItems = items.filter(i => i.product.id !== basketItem.product.id);
-                    auth?.setUser({...user, basket: {...user.basket, items: [...newItems]}});
-                }
+                await loadBasket();
             }
             else {
                 throw Error("Error removing from basket");
             }            
         }).catch(error => {
             console.error('Error removing item from basket: ', error)
-        });
+        }).finally(() => setLoading(false))
     }
 
     return (
         <BasketContainer width={width}>
             {!loading ? <>
                 <ScrollableItems>
-                {user.basket?.items && user.basket.items.map((item, key) =>
+                {basket?.items && basket.items.map((item, key) =>
                     <Item key={key} className="center-column">
                         <p>{item.product.name}</p>
                         <p>{item.product.description}</p>
@@ -57,10 +53,10 @@ function FloatingBasket({ width, user, auth }: FloatingBasketProps) {
                 )}
                 </ScrollableItems>
                 <BasketBottom>
-                    <TotalCost>Total: £{user.basket.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2)}</TotalCost>
-                    <CheckoutButton onClick={() => navigate("/checkout")} disabled={user.basket.items.length === 0}>Checkout</CheckoutButton>
+                    <TotalCost>Total: £{basket.items.reduce((acc, curr) => acc + (curr.product.cost * curr.count), 0).toFixed(2)}</TotalCost>
+                    <CheckoutButton onClick={() => navigate("/checkout")} disabled={basket.items.length === 0}>Checkout</CheckoutButton>
                 </BasketBottom>
-            </> : <Loader visible={loading} />}
+            </> : <Loader />}
         </BasketContainer>
     );
 }

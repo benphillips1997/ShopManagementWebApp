@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/GetBasket/{userId}": {
+    "/api/Basket/GetBasket/{userId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -43,7 +43,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/AddItemToBasket/{basketId}": {
+    "/api/Basket/AddItemToBasket/{basketId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -88,7 +88,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/RemoveItemFromBasket/{basketId}": {
+    "/api/Basket/RemoveItemFromBasket/{basketId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -133,7 +133,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/ClearBasket/{basketId}": {
+    "/api/Basket/ClearBasket/{basketId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -172,7 +172,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/GetOrders": {
+    "/api/Order/GetOrders": {
         parameters: {
             query?: never;
             header?: never;
@@ -209,7 +209,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/GetOrder/{id}": {
+    "/api/Order/GetOrder/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -248,7 +248,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/CreateOrder": {
+    "/api/Order/CreateOrder": {
         parameters: {
             query?: never;
             header?: never;
@@ -291,7 +291,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/MakePayment": {
+    "/api/Order/MakePayment": {
         parameters: {
             query?: never;
             header?: never;
@@ -334,7 +334,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/UpdateOrder": {
+    "/api/Order/UpdateOrder": {
         parameters: {
             query?: never;
             header?: never;
@@ -377,7 +377,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/DeleteOrder/{id}": {
+    "/api/Order/DeleteOrder/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -416,7 +416,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/GetProducts": {
+    "/api/Product/GetProducts": {
         parameters: {
             query?: never;
             header?: never;
@@ -453,7 +453,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/GetProduct/{id}": {
+    "/api/Product/GetProduct/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -492,7 +492,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/AddProduct": {
+    "/api/Product/AddProduct": {
         parameters: {
             query?: never;
             header?: never;
@@ -535,7 +535,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/UpdateProduct": {
+    "/api/Product/UpdateProduct": {
         parameters: {
             query?: never;
             header?: never;
@@ -617,7 +617,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Login": {
+    "/api/User/Login": {
         parameters: {
             query?: never;
             header?: never;
@@ -660,7 +660,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/GetUsers": {
+    "/api/User/GetUserSession": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": null | components["schemas"]["User"];
+                        "application/json": null | components["schemas"]["User"];
+                        "text/json": null | components["schemas"]["User"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/User/GetUsers": {
         parameters: {
             query?: never;
             header?: never;
@@ -697,7 +734,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/GetUser/{id}": {
+    "/api/User/GetUser/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -736,7 +773,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/AddUser": {
+    "/api/User/AddUser": {
         parameters: {
             query?: never;
             header?: never;
@@ -779,7 +816,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/UpdateUser": {
+    "/api/User/UpdateUser": {
         parameters: {
             query?: never;
             header?: never;
@@ -822,7 +859,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/DeleteUser": {
+    "/api/User/DeleteUser": {
         parameters: {
             query?: never;
             header?: never;
@@ -950,6 +987,7 @@ export interface components {
         };
         UserLoginResponse: {
             user?: null | components["schemas"]["User"];
+            token?: null | string;
             errorMessage?: null | string;
             success: boolean;
         };

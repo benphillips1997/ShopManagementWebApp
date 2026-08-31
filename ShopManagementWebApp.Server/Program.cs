@@ -1,10 +1,16 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using ShopManagementWebApp.Server;
 using ShopManagementWebApp.Server.Services;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,48 +24,10 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options =>
-{
-    AddOpenApiOptions(ref options);
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReactDev", policy =>
-    {
-        policy.WithOrigins("https://localhost:59716")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
-var app = builder.Build();
-
-app.UseDefaultFiles();
-app.MapStaticAssets();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-app.UseCors("AllowReactDev");
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
-
-app.Run();
-
-
-void AddOpenApiOptions(ref OpenApiOptions options)
 {
     options.AddSchemaTransformer((schema, context, cancellationToken) =>
     {
@@ -110,4 +78,95 @@ void AddOpenApiOptions(ref OpenApiOptions options)
 
         return Task.CompletedTask;
     });
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactDev", policy =>
+    {
+        policy.WithOrigins("https://localhost:59716")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.MapInboundClaims = false;         // Keep the claim names exactly as they appear in the token (no surprise remapping).
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        //ValidateSignatureLast = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+        //ClockSkew = TimeSpan.Zero,
+        NameClaimType = JwtRegisteredClaimNames.Name,
+        RoleClaimType = ClaimTypes.Role
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Append("Token-Expired", "true");
+            }
+
+            if (context.Exception.GetType() == typeof(SecurityTokenInvalidSigningKeyException))
+            {
+                context.Response.Headers.Append("Invalid-SigningKey", "true");
+            }
+
+            if (context.Exception.GetType() == typeof(SecurityTokenInvalidIssuerException))
+            {
+                context.Response.Headers.Append("Invalid-Issuer", "true");
+            }
+
+            if (context.Exception.GetType() == typeof(SecurityTokenInvalidSignatureException))
+            {
+                context.Response.Headers.Append("Invalid-Signature", "true");
+            }
+
+            if (context.Exception.GetType() == typeof(SecurityTokenInvalidAudienceException))
+            {
+                context.Response.Headers.Append("Invalid-Audience", "true");
+            }
+
+            return Task.CompletedTask;
+        }
+    };
+});
+
+var app = builder.Build();
+
+//app.UseDefaultFiles();
+//app.MapStaticAssets();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
 }
+
+app.UseHttpsRedirection();
+
+app.UseCors("AllowReactDev");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.MapFallbackToFile("/index.html");
+
+app.Run();

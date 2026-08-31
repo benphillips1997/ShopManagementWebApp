@@ -4,6 +4,7 @@ import { MonthPicker, YearPicker } from "react-dropdown-date";
 import { api } from "../api/client";
 import { useAuth } from "../modules/authProvider";
 import type { Order, PaymentRequestDto } from "../api/interfaces";
+import styled from "styled-components";
 
 function Payment() {
     const user = useAuth()?.user;
@@ -55,18 +56,19 @@ function Payment() {
     <>
         <Navbar />
         <div className="center">
-            <form action={() => makePayment()} className="center-column">
-                <div>
-                    <label htmlFor="cardNumber">Card number</label>
+            <FormContainer onSubmit={makePayment} className="center-column">
+                <FormComponent>
+                    <label htmlFor="cardNumber">Card number: </label>
                     <input type="text" id="cardNumber" name="cardNumber" value={paymentInfo.cardNumber} />
-                </div>
-                <div>
-                    <label htmlFor="expiryDate">Expiry date</label>
+                </FormComponent>
+                <FormComponent>
+                    <label htmlFor="expiryDate">Expiry date: </label>
                     <MonthPicker
                         id="expiryMonth"
                         name="expiryMonth"
                         endYearGiven
                         year={+paymentInfo.expiryYear}
+                        short
                         value={+paymentInfo.expiryMonth}
                         onChange={(month: any) => setPaymentInfo({ ...paymentInfo, expiryMonth: month.toString() })}
                     />
@@ -78,16 +80,27 @@ function Payment() {
                         value={+paymentInfo.expiryYear}
                         onChange={(year: any) => setPaymentInfo({ ...paymentInfo, expiryYear: year.toString() })}
                     />                    
-                </div>
-                <div>
-                    <label htmlFor="cvv">CVV</label>
+                </FormComponent>
+                <FormComponent>
+                    <label htmlFor="cvv">CVV: </label>
                     <input type="text" id="cvv" name="cvv" value={paymentInfo.cvv} />
-                </div>
+                </FormComponent>
                 <button type="submit">Pay</button>
-            </form>
+            </FormContainer>
         </div>
     </>
     );
 }
 
 export default Payment;
+
+const FormContainer = styled.form`
+    margin: 60px;
+    width: 50%;
+    padding: 40px;
+    border: 1px solid black;
+`
+
+const FormComponent = styled.div`
+    margin: 10px;
+`

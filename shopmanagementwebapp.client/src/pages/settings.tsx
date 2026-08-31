@@ -1,3 +1,4 @@
+import { type SubmitEvent } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import Navbar from "../modules/navbar";
 import { useState } from "react";
@@ -5,6 +6,7 @@ import { useAuth } from "../modules/authProvider";
 import { api } from "../api/client";
 import styled from "styled-components";
 import type { UpdateUserRequest } from "../api/interfaces";
+import Loader from '../modules/loader';
 
 function Settings() {
     const auth = useAuth();
@@ -24,8 +26,10 @@ function Settings() {
     const [editForm, setEditForm] = useState<Record<string, boolean>>(
         () => Object.keys(defaultFormData).reduce((acc, key) => ({ ...acc, [key]: false }), {})
     );
+    const [loading, setLoading] = useState(false);
 
-    const updateDetails = () => {
+    const updateDetails = (event: SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
         if (editForm.currentPassword && formData.newPassword !== formData.confirmPassword) {
             console.log("Passwords do not match");
             return;
@@ -43,9 +47,11 @@ function Settings() {
             newPhone: editForm.phone ? formData.phone : undefined
         };
 
-        api.POST("/api/UpdateUser", { body: dataToSend }).then(response => {
+        setLoading(true);
+
+        api.POST("/api/User/UpdateUser", { body: dataToSend }).then(response => {
             if (response.data) {
-                api.GET("/api/GetUser/{id}", { params: { path: { id: user?.id! }}}).then(response => {
+                api.GET("/api/User/GetUser/{id}", { params: { path: { id: user?.id! }}}).then(response => {
                     if (response.data) {
                         auth?.setUser(response.data);
                         setEditForm(() => Object.keys(defaultFormData).reduce((acc, key) => ({ ...acc, [key]: false }), {}));
@@ -63,7 +69,7 @@ function Settings() {
             }
         }).catch(error => {
             console.log(error);
-        })
+        }).finally(() => setLoading(false))
     }
 
     const toggleEdit = (key: string) => {
@@ -90,12 +96,12 @@ function Settings() {
     <>
         <Navbar />
         <div className="center">
-            <TabContainer className="center-column">
+            {!loading ? <TabContainer className="center-column">
                 <TabList>
                     <Tab>Update details</Tab>
                 </TabList>
                 <TabPanel>
-                    <form action={() => updateDetails()} onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })} className="center-column">
+                    <form onSubmit={updateDetails} onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })} className="center-column">
                         <div>
                             <label htmlFor="email">Email:</label><br />
                             <input 
@@ -221,6 +227,7 @@ function Settings() {
                     </form>
                 </TabPanel>
             </TabContainer>
+            : <Loader />}
         </div>
     </>
     );

@@ -21,37 +21,37 @@ namespace ShopManagementWebApp.Server.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet("/api/GetOrders")]
+        [HttpGet("GetOrders")]
         public IEnumerable<Order> GetOrders()
         {
             return _orderService.GetOrders();
         }
 
-        [HttpGet("/api/GetOrder/{id}")]
+        [HttpGet("GetOrder/{id}")]
         public Order? GetOrder(int id)
         {
             return _orderService.GetOrder(id);
         }
 
-        [HttpPost("/api/CreateOrder")]
+        [HttpPost("CreateOrder")]
         public bool CreateOrder([FromBody] Order order)
         {
             return _orderService.CreateOrder(order);
         }
 
-        [HttpPost("/api/MakePayment")]
+        [HttpPost("MakePayment")]
         public PaymentResponseDto MakePayment(PaymentRequestDto paymentRequest)
         {
             return _paymentService.ProcessPayment(paymentRequest);
         }
 
-        [HttpPost("/api/UpdateOrder")]
+        [HttpPost("UpdateOrder")]
         public bool UpdateOrder([FromBody] Order order)
         {
             return _orderService.UpdateOrder(order);
         }
 
-        [HttpDelete("/api/DeleteOrder/{id}")]
+        [HttpDelete("DeleteOrder/{id}")]
         public bool DeleteOrder(int id)
         {
             return _orderService.DeleteOrder(id);

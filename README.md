@@ -21,7 +21,7 @@ A web based shopping app with product catalog, basket, checkout and order histor
 ## Users
 
 User account:
-    - email: user@a.co
+    - email: user@shop.com
     - password: User
 
 

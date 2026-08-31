@@ -1,12 +1,10 @@
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useAuth } from "../modules/authProvider";
 import ErrorMessage from "../modules/errorMessage";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
-import { api } from "../api/client";
 import Loader from "../modules/loader";
-
 
 function Login() {
     const [input, setInput] = useState({ email: "", password: "" });
@@ -15,20 +13,15 @@ function Login() {
     const navigate = useNavigate();
     const [loggingIn, setLoggingIn] = useState(false);
 
-    const login = () => {
+    const login = async (event: SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
         setLoggingIn(true);
-        api.POST("/api/Login", { body: { email: input.email, password: input.password } }).then(response => {
-            if (!response.error && response.data.success) {
-                auth?.setUser(response.data.user!);
-                navigate("/");
-            }
-            else {
-                throw Error(response.data.errorMessage ?? "Unknown error");
-            }
-        }).catch(error => {
-            console.error('Login error: ', error);
+        const error: string = await auth?.login(input.email, input.password) || "";
+        if (!!error) {
             setError(error);
-        }).finally(() => setLoggingIn(false))
+        }
+        setLoggingIn(false);
+        navigate("/");
     }    
 
     return (
@@ -36,7 +29,7 @@ function Login() {
         <Navbar />
         <FormDiv>
             {!loggingIn ?
-            <FormContainer action={() => login()}>
+            <FormContainer onSubmit={login}>
                 <label htmlFor="email">Email:</label>
                 <input 
                     type="email" 

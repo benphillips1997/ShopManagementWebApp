@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
 using ShopManagementWebApp.Server.Services;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ShopManagementWebApp.Server.Controllers
 {
@@ -19,37 +21,50 @@ namespace ShopManagementWebApp.Server.Controllers
             _userService = userService;
         }
 
-        [HttpPost("/api/Login")]
+        [HttpPost("Login")]
         public UserLoginResponse Login([FromBody] LoginRequest request)
         {
             return _userService.Login(request);
         }
 
-        [HttpGet("/api/GetUsers")]
+        [Authorize]
+        [HttpGet("GetUserSession")]
+        public User? GetUserSession()
+        {
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out var userId))
+            {
+                return null;
+            }
+
+            return _userService.GetUser(userId);
+        }
+
+        [HttpGet("GetUsers")]
         public IEnumerable<User> GetUsers()
         {
             return _userService.GetUsers();
         }
 
-        [HttpGet("/api/GetUser/{id}")]
+        [HttpGet("GetUser/{id}")]
         public User? GetUser(int id)
         {
             return _userService.GetUser(id);
         }
 
-        [HttpPost("/api/AddUser")]
+        [HttpPost("AddUser")]
         public bool AddUser([FromBody] User user)
         {
             return _userService.AddUser(user);
         }
 
-        [HttpPost("/api/UpdateUser")]
+        [HttpPost("UpdateUser")]
         public bool UpdateUser([FromBody] UpdateUserRequest requestDetails)
         {
             return _userService.UpdateUser(requestDetails);
         }
 
-        [HttpDelete("/api/DeleteUser")]
+        [HttpDelete("DeleteUser")]
         public bool DeleteUser(int id)
         {
             return _userService.DeleteUser(id);

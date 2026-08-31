@@ -14,7 +14,7 @@ namespace ShopManagementWebApp.Server.Services
 
         public Basket? GetBasket(int userId)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+            var user = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == userId);
 
             if (user == null) { return null; }
 

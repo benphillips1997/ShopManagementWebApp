@@ -1,17 +1,23 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
+using System.Security.Claims;
+using System.Text;
 
 namespace ShopManagementWebApp.Server.Services
 {
     public class UserService : IUserService
     {
         private readonly ShopManagementDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserService(ShopManagementDbContext context)
+        public UserService(ShopManagementDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public UserLoginResponse Login(LoginRequest request)
@@ -34,14 +40,17 @@ namespace ShopManagementWebApp.Server.Services
 
             bool passwordMatch = VerifyPassword(ref foundUser, foundUser.Password, request.Password);
 
-            if (!passwordMatch)
+            if (passwordMatch)
+            {
+                response.User = foundUser;
+                response.User.Password = string.Empty;
+                response.Token = GenerateJwtToken(foundUser);
+            }
+            else
             {
                 response.Success = false;
                 response.ErrorMessage = "Incorrect password";
-            }
-
-            response.User = foundUser;
-            response.User.Password = string.Empty;
+            }            
 
             return response;
         }
@@ -53,7 +62,8 @@ namespace ShopManagementWebApp.Server.Services
 
         public User? GetUser(int id)
         {
-            return _context.Users.FirstOrDefault(x => x.Id == id);
+            return _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product)
+                .Include(u => u.Orders).FirstOrDefault(x => x.Id == id);
         }
 
         public bool AddUser(User user)
@@ -172,6 +182,35 @@ namespace ShopManagementWebApp.Server.Services
             }
 
             return result == PasswordVerificationResult.Success;
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Role, user.UserType.ToString())
+            };
+
+            var descriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddMinutes(int.Parse(_configuration["Jwt:ExpiryMinutes"]!)),
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
+                SigningCredentials = credentials
+            };
+
+            var handler = new JsonWebTokenHandler();
+            var token = handler.CreateToken(descriptor);
+
+            return token;
         }
     }
 }

@@ -18,11 +18,14 @@ function Products() {
     const [basketLoading, setBasketLoading] = useState(false);
 
     useEffect(() => {
-        loadProducts();
+        loadProducts();        
+    }, [])
+
+    useEffect(() => {
         if (user) {
             loadBasket();
         }
-    }, [])
+    }, [user])
 
     const loadProducts = () => {
         setLoading(true);

@@ -12,47 +12,21 @@ import Order from './pages/order.tsx';
 import Checkout from './pages/checkout.tsx';
 import Payment from './pages/payment.tsx';
 import Settings from './pages/settings.tsx';
+import UserRoute from './pages/userRoute.tsx';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    ErrorBoundary: Error,
-    Component: Dashboard
-  },
-  {
-    path: '/products',
-    Component: Products
-  },
-  { 
-    path: '/login', 
-    Component: Login 
-  },
-  { 
-    path: '/register', 
-    Component: Register 
-  },
-  {
-    path: '/orders',
-    Component: Orders,
-    children: [
-      {
-        path: ':orderId',
-        Component: Order
-      }
+  { path: '/', ErrorBoundary: Error, Component: Dashboard },
+  { path: '/products', Component: Products },
+  { path: '/login', Component: Login },
+  { path: '/register', Component: Register },
+  { Component: UserRoute, children: [
+      { path: '/orders', Component: Orders, children: [{ path: ':orderId', Component: Order }] },
+      { path: '/checkout', Component: Checkout },
+      { path: '/payment', Component: Payment },
+      { path: '/settings', Component: Settings }
     ]
   },
-  {
-    path: '/checkout',
-    Component: Checkout
-  },
-  {
-    path: '/payment',
-    Component: Payment
-  },
-  {
-    path: '/settings',
-    Component: Settings
-  }
+  
 ]);
 
 createRoot(document.getElementById('root')!).render(

@@ -29,10 +29,10 @@ function Payment() {
             user: user
         }
 
-        api.POST("/api/CreateOrder", { body: order }).then(response => {
+        api.POST("/api/Order/CreateOrder", { body: order }).then(response => {
             if (response) {
                 console.log("Successfully created order");
-                api.POST("/api/MakePayment", { body: {} as PaymentRequestDto}).then(response => {
+                api.POST("/api/Order/MakePayment", { body: {} as PaymentRequestDto}).then(response => {
                     if (response.data?.success && !response.error) {
                         console.log("Payment successful");
                     }

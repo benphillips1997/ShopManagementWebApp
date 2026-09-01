@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { useAuth } from "../modules/authProvider";
-import Navbar from "../modules/navbar";
+import { useAuth } from "../../modules/authProvider";
+import Navbar from "../../modules/navbar";
 
 
 function Order() {

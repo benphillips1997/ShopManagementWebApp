@@ -682,9 +682,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": null | components["schemas"]["User"];
-                        "application/json": null | components["schemas"]["User"];
-                        "text/json": null | components["schemas"]["User"];
+                        "text/plain": components["schemas"]["User"];
+                        "application/json": components["schemas"]["User"];
+                        "text/json": components["schemas"]["User"];
                     };
                 };
             };

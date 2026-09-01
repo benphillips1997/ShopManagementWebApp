@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import Loader from "./loader";
 import { useNavigate } from "react-router-dom";
 import type { Basket, BasketItem } from "../api/interfaces";

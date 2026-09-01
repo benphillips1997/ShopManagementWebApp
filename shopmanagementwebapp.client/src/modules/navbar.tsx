@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useAuth } from "./authProvider";
 
 function Navbar() {
@@ -15,7 +15,7 @@ function Navbar() {
         <NavbarContainer>
             <NavbarNav>
                 <NavbarLink to="/">Dashboard</NavbarLink>
-                <NavbarLink to="/products">Products</NavbarLink>
+                <NavbarLink to="/shop">Shop</NavbarLink>
                 {auth?.user && <>
                 <NavbarLink to="/orders">Orders</NavbarLink>
                 <NavbarLink to="/settings">Settings</NavbarLink>
@@ -54,21 +54,26 @@ const Spacer = styled.div`
     margin-left: auto;
 `
 
-const NavbarLink = styled(NavLink)`    
-    padding: 10px 16px 10px 16px;
+const NavbarItemCss = css`
+    padding: 10px 16px;
     text-decoration: none;
-    border: 1px black white;
-    margin: 10px 10px 10px 10px;
+    margin: 10px 12px;
     background-color: #5250c2;
     border-radius: 5px;
     font-size: 18px;
-
-    &.active {
-        
-    }
+    color: white;
 
     &:hover {
-        
+        padding: 12px 18px;
+        margin: 8px 10px;
+    }
+`
+
+const NavbarLink = styled(NavLink)`    
+    ${NavbarItemCss}
+
+    &.active {
+        background-color: #161658;
     }
 
     &.pending {
@@ -81,16 +86,5 @@ const NavbarLink = styled(NavLink)`
 `
 
 const NavbarButton = styled.button`
-    padding: 10px 16px 10px 16px;
-    text-decoration: none;
-    border: 1px black white;
-    margin: 10px 10px 10px 10px;
-    background-color: #5250c2;
-    border-radius: 5px;
-    font-size: 18px;
-    color: white;
-
-    &:hover {
-        
-    }
+    ${NavbarItemCss}
 `

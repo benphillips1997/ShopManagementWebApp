@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../modules/authProvider";
-import Navbar from "../modules/navbar";
-import Loader from "../modules/loader";
+import { useAuth } from "../../modules/authProvider";
+import Navbar from "../../modules/navbar";
+import Loader from "../../modules/loader";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import type { Basket, BasketItem } from "../api/interfaces";
-import { api } from "../api/client";
+import type { Basket, BasketItem } from "../../api/interfaces";
+import { api } from "../../api/client";
 
 
 function Checkout() {

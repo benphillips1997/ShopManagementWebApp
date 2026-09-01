@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
 using ShopManagementWebApp.Server.Services;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ShopManagementWebApp.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -20,10 +23,16 @@ namespace ShopManagementWebApp.Server.Controllers
             _orderService = orderService;
             _paymentService = paymentService;
         }
-
+        
         [HttpGet("GetOrders")]
-        public IEnumerable<Order> GetOrders()
+        public ActionResult<List<Order>> GetOrders()
         {
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
             return _orderService.GetOrders();
         }
 

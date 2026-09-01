@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Navbar from "../modules/navbar";
+import Navbar from "../../modules/navbar";
 import { MonthPicker, YearPicker } from "react-dropdown-date";
-import { api } from "../api/client";
-import { useAuth } from "../modules/authProvider";
-import type { Order, PaymentRequestDto } from "../api/interfaces";
+import { api } from "../../api/client";
+import { useAuth } from "../../modules/authProvider";
+import type { Order, PaymentRequestDto } from "../../api/interfaces";
 import styled from "styled-components";
 
 function Payment() {

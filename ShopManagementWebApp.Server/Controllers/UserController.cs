@@ -29,15 +29,21 @@ namespace ShopManagementWebApp.Server.Controllers
 
         [Authorize]
         [HttpGet("GetUserSession")]
-        public User? GetUserSession()
+        public ActionResult<User> GetUserSession()
         {
             var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             if (userIdClaim == null || !int.TryParse(userIdClaim, out var userId))
             {
-                return null;
+                return Unauthorized();
             }
 
-            return _userService.GetUser(userId);
+            var user = _userService.GetUser(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
         }
 
         [HttpGet("GetUsers")]

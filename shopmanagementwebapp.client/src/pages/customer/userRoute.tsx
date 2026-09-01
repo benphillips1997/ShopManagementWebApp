@@ -1,12 +1,11 @@
-import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../modules/authProvider";
-import Loader from "../modules/loader";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../../modules/authProvider";
+import Loader from "../../modules/loader";
 
 
 function UserRoute() {
     const auth = useAuth();
     const location = useLocation();
-    const navigate = useNavigate();
 
     if (auth?.loading) {
         return <Loader />;

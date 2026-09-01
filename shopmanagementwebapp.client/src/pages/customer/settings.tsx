@@ -1,12 +1,12 @@
 import { type SubmitEvent } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import Navbar from "../modules/navbar";
+import Navbar from "../../modules/navbar";
 import { useState } from "react";
-import { useAuth } from "../modules/authProvider";
-import { api } from "../api/client";
+import { useAuth } from "../../modules/authProvider";
+import { api } from "../../api/client";
 import styled from "styled-components";
-import type { UpdateUserRequest } from "../api/interfaces";
-import Loader from '../modules/loader';
+import type { UpdateUserRequest } from "../../api/interfaces";
+import Loader from '../../modules/loader';
 
 function Settings() {
     const auth = useAuth();

@@ -8,7 +8,7 @@ import ErrorMessage from "../modules/errorMessage";
 import { api } from "../api/client";
 import type { Basket, BasketItem, Product } from "../api/interfaces";
 
-function Products() {
+function Shop() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const auth = useAuth();
@@ -18,7 +18,7 @@ function Products() {
     const [basketLoading, setBasketLoading] = useState(false);
 
     useEffect(() => {
-        loadProducts();        
+        loadProducts();
     }, [])
 
     useEffect(() => {
@@ -103,7 +103,7 @@ function Products() {
     );
 }
 
-export default Products;
+export default Shop;
 
 const GridContainer = styled.div<{ $length: number }>`
     margin: 40px;

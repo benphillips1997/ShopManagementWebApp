@@ -38,7 +38,6 @@ function Payment() {
 
         const items = basket.items;
 
-
         const order: Order = {
             items: items.map(item => ({ product: item.product, productId: item.product.id!, costAtPurchase: item.product.cost, count: item.count })),
             orderDate: new Date().toISOString(),
@@ -60,7 +59,6 @@ function Payment() {
         api.POST("/api/Order/ProcessOrder", { body: requestBody }).then(response => {
             if (!response.error && response.data.success) {
                 console.log("Order and payment successful");
-
             }
             else {
                 throw Error(response.data.errorMessage ?? `${response.response.status} error while creating order. ${response.response.statusText}`);

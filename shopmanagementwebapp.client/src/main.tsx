@@ -23,10 +23,10 @@ const router = createBrowserRouter([
       { path: '/orders', Component: Orders, children: [{ path: ':orderId', Component: Order }] },
       { path: '/checkout', Component: Checkout },
       { path: '/payment', Component: Payment },
-      { path: '/settings', Component: Settings }
+      { path: '/settings', Component: Settings },
+      
     ]
-  },
-  
+  }  
 ]);
 
 createRoot(document.getElementById('root')!).render(

@@ -25,7 +25,9 @@ namespace ShopManagementWebApp.Server.Services
                     "card"
                 },
                 LineItems = new List<SessionLineItemOptions>(),
-                Mode = "payment"
+                Mode = "payment",
+                SuccessUrl = "https://localhost:59716/order-success",
+                CancelUrl = "https://localhost:59716/payment"
             };
 
             foreach (var item in paymentRequest.Order.Items)

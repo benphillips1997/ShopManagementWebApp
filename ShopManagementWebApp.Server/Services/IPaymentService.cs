@@ -4,6 +4,6 @@ namespace ShopManagementWebApp.Server.Services
 {
     public interface IPaymentService
     {
-        PaymentResponseDto ProcessPayment(PaymentRequestDto requestDetails);
+        ProcessOrderResponseDto ProcessPayment(ProcessOrderRequestDto requestDetails);
     }
 }

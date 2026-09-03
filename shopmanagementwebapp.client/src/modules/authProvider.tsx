@@ -19,6 +19,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         if (token) {
             api.GET("/api/User/GetUserSession").then(response => {
                 if (!response.error && response.data) {

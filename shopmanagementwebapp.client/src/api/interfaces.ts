@@ -11,5 +11,5 @@ export type UserType = components["schemas"]["UserType"];
 export type OrderStatus = components["schemas"]["OrderStatus"];
 export type UpdateUserRequest = components["schemas"]["UpdateUserRequest"];
 export type LoginRequest = components["schemas"]["LoginRequest"];
-export type PaymentRequestDto = components["schemas"]["PaymentRequestDto"];
-export type PaymentResponseDto = components["schemas"]["PaymentResponseDto"];
+export type ProcessOrderRequestDto = components["schemas"]["ProcessOrderRequestDto"];
+export type ProcessOrderResponseDto = components["schemas"]["ProcessOrderResponseDto"];

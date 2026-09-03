@@ -1,4 +1,5 @@
-﻿using ShopManagementWebApp.Server.Models;
+﻿using ShopManagementWebApp.Server.Dtos;
+using ShopManagementWebApp.Server.Models;
 
 namespace ShopManagementWebApp.Server.Services
 {
@@ -6,8 +7,9 @@ namespace ShopManagementWebApp.Server.Services
     {
         List<Order> GetOrders(int userId = -1);
         Order? GetOrder(int id);
-        bool CreateOrder(Order order);
-        bool UpdateOrder(Order order);
+        ProcessOrderResponseDto ProcessOrder(ProcessOrderRequestDto requestDetails);
+        int CreateOrder(Order order);
+        bool UpdateOrder(UpdateOrderDto order);
         bool DeleteOrder(int id);
     }
 }

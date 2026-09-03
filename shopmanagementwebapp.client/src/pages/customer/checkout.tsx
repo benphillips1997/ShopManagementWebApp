@@ -62,7 +62,7 @@ function Checkout() {
                     <Item key={key} className="center-column">
                         <p>{item.product.name}</p>
                         <p>{item.product.description}</p>
-                        <img src={item.product.imageSource ?? ""} alt={`Image of ${item.product.name}`} />
+                        <img src={item.product.imageSource ?? undefined} alt={`Image of ${item.product.name}`} />
                         <p>£{item.product.cost.toFixed(2)}</p>
                         <p>Count: {item.count}</p>
                         <RemoveFromBasketButton onClick={() => removeFromBasket(item)}>

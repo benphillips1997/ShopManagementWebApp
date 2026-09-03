@@ -22,13 +22,12 @@ namespace ShopManagementWebApp.Server.Services
 
         public UserLoginResponse Login(LoginRequest request)
         {
-            var foundUser = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product)
-                .Include(u => u.Orders).FirstOrDefault(x => x.Email == request.Email);
-
             var response = new UserLoginResponse()
             {
                 Success = true
             };
+
+            var foundUser = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Email == request.Email);
 
             if (foundUser == null)
             {
@@ -62,8 +61,9 @@ namespace ShopManagementWebApp.Server.Services
 
         public User? GetUser(int id)
         {
-            return _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product)
-                .Include(u => u.Orders).FirstOrDefault(x => x.Id == id);
+            var user = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == id);
+
+            return user;
         }
 
         public bool AddUser(User user)

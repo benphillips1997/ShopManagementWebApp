@@ -50,9 +50,9 @@ function Settings() {
         setLoading(true);
 
         api.POST("/api/User/UpdateUser", { body: dataToSend }).then(response => {
-            if (response.data) {
+            if (!response.error && response.data) {
                 api.GET("/api/User/GetUser/{id}", { params: { path: { id: user?.id! }}}).then(response => {
-                    if (response.data) {
+                    if (!response.error && response.data) {
                         auth?.setUser(response.data);
                         setEditForm(() => Object.keys(defaultFormData).reduce((acc, key) => ({ ...acc, [key]: false }), {}));
                         console.log("Successfully updated user");

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
@@ -46,16 +47,24 @@ namespace ShopManagementWebApp.Server.Controllers
             return user;
         }
 
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet("GetUsers")]
-        public IEnumerable<User> GetUsers()
+        public List<User> GetUsers()
         {
             return _userService.GetUsers();
         }
 
+        [Authorize]
         [HttpGet("GetUser/{id}")]
-        public User? GetUser(int id)
+        public ActionResult<User> GetUser(int id)
         {
-            return _userService.GetUser(id);
+            var user = _userService.GetUser(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
         }
 
         [HttpPost("AddUser")]
@@ -64,12 +73,14 @@ namespace ShopManagementWebApp.Server.Controllers
             return _userService.AddUser(user);
         }
 
+        [Authorize]
         [HttpPost("UpdateUser")]
         public bool UpdateUser([FromBody] UpdateUserRequest requestDetails)
         {
             return _userService.UpdateUser(requestDetails);
         }
 
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpDelete("DeleteUser")]
         public bool DeleteUser(int id)
         {

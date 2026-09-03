@@ -6,7 +6,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using ShopManagementWebApp.Server;
+using ShopManagementWebApp.Server.Models;
 using ShopManagementWebApp.Server.Services;
+using Stripe;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
@@ -20,7 +22,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ShopManagementDbContext>();
 
-builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductService, ShopManagementWebApp.Server.Services.ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -145,6 +147,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -161,6 +165,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
 app.MapFallbackToFile("/index.html");
 

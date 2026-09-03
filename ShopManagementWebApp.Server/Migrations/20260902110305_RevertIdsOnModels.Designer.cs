@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopManagementWebApp.Server;
 
@@ -11,9 +12,11 @@ using ShopManagementWebApp.Server;
 namespace ShopManagementWebApp.Server.Migrations
 {
     [DbContext(typeof(ShopManagementDbContext))]
-    partial class ShopManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260902110305_RevertIdsOnModels")]
+    partial class RevertIdsOnModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,11 +231,13 @@ namespace ShopManagementWebApp.Server.Migrations
 
             modelBuilder.Entity("ShopManagementWebApp.Server.Models.Order", b =>
                 {
-                    b.HasOne("ShopManagementWebApp.Server.Models.User", null)
+                    b.HasOne("ShopManagementWebApp.Server.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ShopManagementWebApp.Server.Models.OrderItem", b =>

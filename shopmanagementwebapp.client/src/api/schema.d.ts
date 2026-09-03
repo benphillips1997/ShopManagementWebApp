@@ -248,7 +248,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Order/CreateOrder": {
+    "/api/Order/ProcessOrder": {
         parameters: {
             query?: never;
             header?: never;
@@ -266,9 +266,9 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Order"];
-                    "text/json": components["schemas"]["Order"];
-                    "application/*+json": components["schemas"]["Order"];
+                    "application/json": components["schemas"]["ProcessOrderRequestDto"];
+                    "text/json": components["schemas"]["ProcessOrderRequestDto"];
+                    "application/*+json": components["schemas"]["ProcessOrderRequestDto"];
                 };
             };
             responses: {
@@ -278,52 +278,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": boolean;
-                        "application/json": boolean;
-                        "text/json": boolean;
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/Order/MakePayment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["PaymentRequestDto"];
-                    "text/json": components["schemas"]["PaymentRequestDto"];
-                    "application/*+json": components["schemas"]["PaymentRequestDto"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["PaymentResponseDto"];
-                        "application/json": components["schemas"]["PaymentResponseDto"];
-                        "text/json": components["schemas"]["PaymentResponseDto"];
+                        "text/plain": components["schemas"]["ProcessOrderResponseDto"];
+                        "application/json": components["schemas"]["ProcessOrderResponseDto"];
+                        "text/json": components["schemas"]["ProcessOrderResponseDto"];
                     };
                 };
             };
@@ -352,9 +309,9 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Order"];
-                    "text/json": components["schemas"]["Order"];
-                    "application/*+json": components["schemas"]["Order"];
+                    "application/json": components["schemas"]["UpdateOrderDto"];
+                    "text/json": components["schemas"]["UpdateOrderDto"];
+                    "application/*+json": components["schemas"]["UpdateOrderDto"];
                 };
             };
             responses: {
@@ -372,45 +329,6 @@ export interface paths {
             };
         };
         delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/Order/DeleteOrder/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: number | string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": boolean;
-                        "application/json": boolean;
-                        "text/json": boolean;
-                    };
-                };
-            };
-        };
         options?: never;
         head?: never;
         patch?: never;
@@ -758,9 +676,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": null | components["schemas"]["User"];
-                        "application/json": null | components["schemas"]["User"];
-                        "text/json": null | components["schemas"]["User"];
+                        "text/plain": components["schemas"]["User"];
+                        "application/json": components["schemas"]["User"];
+                        "text/json": components["schemas"]["User"];
                     };
                 };
             };
@@ -905,14 +823,16 @@ export interface components {
         Basket: {
             /** Format: int32 */
             id?: null | number;
+            /** Format: int32 */
+            userId: number;
             items: components["schemas"]["BasketItem"][];
         };
         BasketItem: {
             /** Format: int32 */
             id?: null | number;
-            product: components["schemas"]["Product"];
             /** Format: int32 */
             count: number;
+            product: components["schemas"]["Product"];
         };
         LoginRequest: {
             email: string;
@@ -921,7 +841,8 @@ export interface components {
         Order: {
             /** Format: int32 */
             id?: null | number;
-            items: components["schemas"]["OrderItem"][];
+            /** Format: int32 */
+            userId: number;
             /** Format: double */
             totalCost: number;
             /** Format: date-time */
@@ -930,24 +851,32 @@ export interface components {
             paymentStatus: components["schemas"]["PaymentStatus"];
             orderAddress: string;
             orderCountry: string;
-            user: components["schemas"]["User"];
+            items: components["schemas"]["OrderItem"][];
+            user?: null | components["schemas"]["User"];
         };
         OrderItem: {
             /** Format: int32 */
             id?: null | number;
-            product: components["schemas"]["Product"];
             /** Format: int32 */
             count: number;
             /** Format: double */
             costAtPurchase: number;
+            /** Format: int32 */
+            productId: number;
+            product: components["schemas"]["Product"];
         };
         OrderStatus: number;
-        PaymentRequestDto: Record<string, never>;
-        PaymentResponseDto: {
+        PaymentStatus: number;
+        ProcessOrderRequestDto: {
+            /** Format: double */
+            amountToPay: number;
+            order: components["schemas"]["Order"];
+            currency: string;
+        };
+        ProcessOrderResponseDto: {
             success: boolean;
             errorMessage?: null | string;
         };
-        PaymentStatus: number;
         Product: {
             /** Format: int32 */
             id?: null | number;
@@ -958,6 +887,19 @@ export interface components {
             imageSource?: null | string;
             /** Format: int32 */
             stock: number;
+        };
+        UpdateOrderDto: {
+            /** Format: int32 */
+            id?: null | number;
+            /** Format: double */
+            totalCost?: number;
+            /** Format: date-time */
+            orderDate?: null | string;
+            orderStatus?: null | components["schemas"]["OrderStatus"];
+            paymentStatus?: null | components["schemas"]["PaymentStatus"];
+            orderAddress?: null | string;
+            orderCountry?: null | string;
+            items?: null | components["schemas"]["OrderItem"][];
         };
         UpdateUserRequest: {
             /** Format: int32 */
@@ -982,8 +924,8 @@ export interface components {
             address?: null | string;
             country?: null | string;
             phone?: null | string;
-            basket: components["schemas"]["Basket"];
             orders: components["schemas"]["Order"][];
+            basket: components["schemas"]["Basket"];
         };
         UserLoginResponse: {
             user?: null | components["schemas"]["User"];

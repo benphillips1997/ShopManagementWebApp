@@ -42,28 +42,16 @@ namespace ShopManagementWebApp.Server.Controllers
             return _orderService.GetOrder(id);
         }
 
-        [HttpPost("CreateOrder")]
-        public bool CreateOrder([FromBody] Order order)
+        [HttpPost("ProcessOrder")]
+        public ProcessOrderResponseDto ProcessOrder(ProcessOrderRequestDto paymentRequest)
         {
-            return _orderService.CreateOrder(order);
-        }
-
-        [HttpPost("MakePayment")]
-        public PaymentResponseDto MakePayment(PaymentRequestDto paymentRequest)
-        {
-            return _paymentService.ProcessPayment(paymentRequest);
+            return _orderService.ProcessOrder(paymentRequest);
         }
 
         [HttpPost("UpdateOrder")]
-        public bool UpdateOrder([FromBody] Order order)
+        public bool UpdateOrder([FromBody] UpdateOrderDto order)
         {
             return _orderService.UpdateOrder(order);
-        }
-
-        [HttpDelete("DeleteOrder/{id}")]
-        public bool DeleteOrder(int id)
-        {
-            return _orderService.DeleteOrder(id);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace ShopManagementWebApp.Server.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ShopManagementWebApp.Server.Models
 {
     public class User
     {
@@ -11,7 +13,7 @@
         public string? Address { get; set; }
         public string? Country { get; set; }
         public string? Phone { get; set; }
-        public Basket Basket { get; set; } = new Basket();
         public List<Order> Orders { get; set; } = new List<Order>();
+        public required Basket Basket { get; set; }
     }
 }

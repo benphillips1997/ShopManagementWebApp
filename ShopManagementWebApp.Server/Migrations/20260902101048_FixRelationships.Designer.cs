@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopManagementWebApp.Server;
 
@@ -11,9 +12,11 @@ using ShopManagementWebApp.Server;
 namespace ShopManagementWebApp.Server.Migrations
 {
     [DbContext(typeof(ShopManagementDbContext))]
-    partial class ShopManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260902101048_FixRelationships")]
+    partial class FixRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace ShopManagementWebApp.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("Baskets");
                 });
 
@@ -49,7 +49,7 @@ namespace ShopManagementWebApp.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BasketId")
+                    b.Property<int>("BasketId")
                         .HasColumnType("int");
 
                     b.Property<int>("Count")
@@ -61,8 +61,6 @@ namespace ShopManagementWebApp.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BasketId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("BasketItem");
                 });
@@ -100,38 +98,7 @@ namespace ShopManagementWebApp.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("ShopManagementWebApp.Server.Models.OrderItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("CostAtPurchase")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("ShopManagementWebApp.Server.Models.Product", b =>
@@ -202,70 +169,18 @@ namespace ShopManagementWebApp.Server.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ShopManagementWebApp.Server.Models.Basket", b =>
-                {
-                    b.HasOne("ShopManagementWebApp.Server.Models.User", null)
-                        .WithOne("Basket")
-                        .HasForeignKey("ShopManagementWebApp.Server.Models.Basket", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ShopManagementWebApp.Server.Models.BasketItem", b =>
                 {
                     b.HasOne("ShopManagementWebApp.Server.Models.Basket", null)
                         .WithMany("Items")
-                        .HasForeignKey("BasketId");
-
-                    b.HasOne("ShopManagementWebApp.Server.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("BasketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ShopManagementWebApp.Server.Models.Order", b =>
-                {
-                    b.HasOne("ShopManagementWebApp.Server.Models.User", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ShopManagementWebApp.Server.Models.OrderItem", b =>
-                {
-                    b.HasOne("ShopManagementWebApp.Server.Models.Order", null)
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId");
-
-                    b.HasOne("ShopManagementWebApp.Server.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ShopManagementWebApp.Server.Models.Basket", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("ShopManagementWebApp.Server.Models.Order", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("ShopManagementWebApp.Server.Models.User", b =>
-                {
-                    b.Navigation("Basket")
-                        .IsRequired();
-
-                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -37,7 +37,7 @@ function Dashboard() {
                     <DashboardItem to="/users" className="center"><p>Users</p></DashboardItem>
                     </>}
                 </>}
-                {Array.from({length: 4 - (linkAmount % 4)},(_,index) => <DashboardItemPlaceholder />)}
+                {Array.from({length: 4 - (linkAmount % 4)},(_) => <DashboardItemPlaceholder />)}
             </DashboardContainer>
         </div>
     </>

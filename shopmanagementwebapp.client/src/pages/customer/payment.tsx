@@ -58,7 +58,7 @@ function Payment() {
 
         api.POST("/api/Order/ProcessOrder", { body: requestBody }).then(response => {
             if (!response.error && response.data.success) {
-                console.log("Order and payment successful");
+                console.log("Order and payment successful");                
             }
             else {
                 throw Error(response.data.errorMessage ?? `${response.response.status} error while creating order. ${response.response.statusText}`);

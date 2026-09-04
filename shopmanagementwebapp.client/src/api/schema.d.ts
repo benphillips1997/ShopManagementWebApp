@@ -535,6 +535,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Report/GetFilteredOrders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ReportFilters"];
+                    "text/json": components["schemas"]["ReportFilters"];
+                    "application/*+json": components["schemas"]["ReportFilters"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ReportDataResponse"];
+                        "application/json": components["schemas"]["ReportDataResponse"];
+                        "text/json": components["schemas"]["ReportDataResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/User/Login": {
         parameters: {
             query?: never;
@@ -887,6 +930,15 @@ export interface components {
             imageSource?: null | string;
             /** Format: int32 */
             stock: number;
+        };
+        ReportDataResponse: Record<string, never>;
+        ReportFilters: {
+            /** Format: date-time */
+            orderDateStart: string;
+            /** Format: date-time */
+            orderDateEnd: string;
+            orderStatus: components["schemas"]["OrderStatus"];
+            paymentStatus: components["schemas"]["PaymentStatus"];
         };
         UpdateOrderDto: {
             /** Format: int32 */

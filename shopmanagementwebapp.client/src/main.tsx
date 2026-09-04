@@ -13,6 +13,9 @@ import Checkout from './pages/customer/checkout.tsx';
 import Payment from './pages/customer/payment.tsx';
 import Settings from './pages/customer/settings.tsx';
 import UserRoute from './pages/customer/userRoute.tsx';
+import AdminRoute from './pages/admin/adminRoute.tsx';
+import Users from './pages/admin/users.tsx';
+import Reports from './pages/admin/reports.tsx';
 
 const router = createBrowserRouter([
   { path: '/', ErrorBoundary: Error, Component: Dashboard },
@@ -24,7 +27,10 @@ const router = createBrowserRouter([
       { path: '/checkout', Component: Checkout },
       { path: '/payment', Component: Payment },
       { path: '/settings', Component: Settings },
-      
+      { Component: AdminRoute, children: [
+        { path: '/users', Component: Users },
+        { path: '/reports', Component: Reports },
+      ] }
     ]
   }  
 ]);

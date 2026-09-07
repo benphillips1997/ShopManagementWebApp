@@ -16,6 +16,7 @@ import UserRoute from './pages/customer/userRoute.tsx';
 import AdminRoute from './pages/admin/adminRoute.tsx';
 import Users from './pages/admin/users.tsx';
 import Reports from './pages/admin/reports.tsx';
+import NotFound from './modules/notFound.tsx';
 
 const router = createBrowserRouter([
   { path: '/', ErrorBoundary: Error, Component: Dashboard },
@@ -23,7 +24,8 @@ const router = createBrowserRouter([
   { path: '/login', Component: Login },
   { path: '/register', Component: Register },
   { Component: UserRoute, children: [
-      { path: '/orders', Component: Orders, children: [{ path: ':orderId', Component: Order }] },
+      { path: '/orders', Component: Orders },
+      { path: '/order/:orderId', Component: Order },
       { path: '/checkout', Component: Checkout },
       { path: '/payment', Component: Payment },
       { path: '/settings', Component: Settings },
@@ -32,7 +34,8 @@ const router = createBrowserRouter([
         { path: '/reports', Component: Reports },
       ] }
     ]
-  }  
+  },
+  { path: "*", Component: NotFound }
 ]);
 
 createRoot(document.getElementById('root')!).render(

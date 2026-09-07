@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
 import { api } from "../api/client";
+import Loader from "../modules/loader";
 
 function Register() {
     const [formData, setFormData] = useState(
@@ -11,10 +12,12 @@ function Register() {
     );
     const navigation = useNavigate();
     const [error, setError] = useState<string>();
+    const [loading, setLoading] = useState(false);
 
     const register = (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
-        api.POST("/api/User/AddUser", { body: { ...formData, userType: 0, basket: { items: [] }, orders: [] }}).then(response => {            
+        setLoading(true);
+        api.POST("/api/User/AddUser", { body: { ...formData, userType: 0, basket: { userId: undefined!, items: [] }, orders: [] }}).then(response => {            
             if (response.data) {
                 navigation('/login');
             }
@@ -24,12 +27,13 @@ function Register() {
         }).catch(error => {
             console.error('Registration error: ', error);
             setError(error);
-        })
+        }).finally(() => setLoading(false))
     }
 
     return (
         <>
         <Navbar />
+        {!loading ? 
         <FormDiv>
             <FormContainer onSubmit={register} onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}>
                 <label htmlFor="email">Email:</label>
@@ -99,6 +103,7 @@ function Register() {
                 {!!error && <ErrorMessage message={error} />}
             </FormContainer>
         </FormDiv>
+        : <Loader />}
         </>
     );
 }

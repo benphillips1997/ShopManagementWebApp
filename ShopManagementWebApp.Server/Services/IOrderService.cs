@@ -5,7 +5,7 @@ namespace ShopManagementWebApp.Server.Services
 {
     public interface IOrderService
     {
-        List<Order> GetOrders(int userId = -1);
+        List<Order> GetOrders(int userId);
         Order? GetOrder(int id);
         ProcessOrderResponseDto ProcessOrder(ProcessOrderRequestDto requestDetails);
         int CreateOrder(Order order);

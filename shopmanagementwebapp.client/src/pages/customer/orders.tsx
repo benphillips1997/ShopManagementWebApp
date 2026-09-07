@@ -5,6 +5,8 @@ import Navbar from "../../modules/navbar";
 import type { Order } from "../../api/interfaces";
 import { api } from "../../api/client";
 import Loader from "../../modules/loader";
+import { getEnumName, OrderStatus } from "../../enums";
+import { Link } from "react-router-dom";
 
 function Orders() {
     const auth = useAuth();
@@ -35,17 +37,18 @@ function Orders() {
         <Navbar />
         <div className="center">
             {!loading ? <>
-                {orders && orders.length > 0 ? orders?.map(order => 
-                    <OrderContainer className="center-column">
-                        <p>{order.orderDate}</p>
-                        <p>{order.orderStatus}</p>
-                        <p>{order.orderAddress}</p>
-                        {order.items && order.items.map(item => 
-                            <p>{item.count} {item.product.name} - £{item.costAtPurchase}</p>
+                {orders && orders.length > 0 ? 
+                    <OrdersDiv>
+                        {orders?.map(order => 
+                            <OrderContainer className="center-column">
+                                <p>Order Date: {new Date(order.orderDate).toDateString()}</p>
+                                <p>Order Status: {getEnumName(OrderStatus, order.orderStatus).charAt(0).toUpperCase() + getEnumName(OrderStatus, order.orderStatus).slice(1)}</p>
+                                <p>Order Address: {order.orderAddress}, {order.orderCountry}</p>
+                                <p>Total Cost: £{order.totalCost}</p>
+                                <OrderLink to={`/order/${order.id}`}>View Full Order</OrderLink>
+                            </OrderContainer>
                         )}
-                        <p>£{order.totalCost}</p>
-                    </OrderContainer>
-                    )
+                    </OrdersDiv>
                 : <h1>No orders to display</h1>} 
             </> : <Loader />}
         </div>
@@ -55,6 +58,20 @@ function Orders() {
 
 export default Orders;
 
+const OrdersDiv = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 40px;
+    width: 40%;
+    padding: 20px;
+`
+
 const OrderContainer = styled.div`
+    border: 1px solid black;
+    padding: 40px;
+`
+
+const OrderLink = styled(Link)`
 
 `

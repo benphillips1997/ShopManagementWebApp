@@ -19,14 +19,14 @@ namespace ShopManagementWebApp.Server.Services
             _paymentService = paymentService;
         }
 
-        public List<Order> GetOrders(int userId = -1)
+        public List<Order> GetOrders(int userId)
         {
-            return _context.Orders.Where(o => o.UserId == userId || userId == -1).ToList();
+            return _context.Orders.Include(o => o.Items).ThenInclude(i => i.Product).Where(o => o.UserId == userId).ToList();
         }
 
         public Order? GetOrder(int id)
         {
-            return _context.Orders.FirstOrDefault(x => x.Id == id);
+            return _context.Orders.Include(o => o.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == id);
         }
 
         public ProcessOrderResponseDto ProcessOrder(ProcessOrderRequestDto requestDetails)

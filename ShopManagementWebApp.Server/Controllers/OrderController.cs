@@ -33,13 +33,20 @@ namespace ShopManagementWebApp.Server.Controllers
                 return Unauthorized();
             }
 
-            return _orderService.GetOrders();
+            return _orderService.GetOrders(userId);
         }
 
-        [HttpGet("GetOrder/{id}")]
-        public Order? GetOrder(int id)
+        [HttpGet("GetOrder/{orderId}")]
+        public ActionResult<Order> GetOrder(int orderId)
         {
-            return _orderService.GetOrder(id);
+            var order = _orderService.GetOrder(orderId);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return order;
         }
 
         [HttpPost("ProcessOrder")]

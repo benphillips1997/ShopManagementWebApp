@@ -37,7 +37,7 @@ function Dashboard() {
                     <DashboardItem to="/users" className="center"><p>Users</p></DashboardItem>
                     </>}
                 </>}
-                {Array.from({length: 4 - (linkAmount % 4)},(_) => <DashboardItemPlaceholder />)}
+                {Array.from({length: linkAmount % 4 === 0 ? 0 : 4 - linkAmount % 4},(_) => <DashboardItemPlaceholder>{":)"}</DashboardItemPlaceholder>)}
             </DashboardContainer>
         </div>
     </>
@@ -61,12 +61,17 @@ const DashboardItemCss = css`
     border: 2px solid rgb(95 97 110);
     padding: 20px;
     margin: 10px;
+    background: none;
+    color: white;
+    font-size: 22px;
+    text-decoration: none;
 `
 
 const DashboardItem = styled(Link)`
     ${DashboardItemCss}
 `
 
-const DashboardItemPlaceholder = styled.div`
+const DashboardItemPlaceholder = styled.button`
     ${DashboardItemCss}
+    cursor: default;
 `

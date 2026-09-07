@@ -209,7 +209,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Order/GetOrder/{id}": {
+    "/api/Order/GetOrder/{orderId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -221,7 +221,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    id: number | string;
+                    orderId: number | string;
                 };
                 cookie?: never;
             };
@@ -233,9 +233,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": null | components["schemas"]["Order"];
-                        "application/json": null | components["schemas"]["Order"];
-                        "text/json": null | components["schemas"]["Order"];
+                        "text/plain": components["schemas"]["Order"];
+                        "application/json": components["schemas"]["Order"];
+                        "text/json": components["schemas"]["Order"];
                     };
                 };
             };

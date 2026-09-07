@@ -20,8 +20,10 @@ function Login() {
         if (!!error) {
             setError(error);
         }
-        setLoggingIn(false);
-        navigate("/");
+        else {
+            navigate("/");
+        }
+        setLoggingIn(false);        
     }    
 
     return (
@@ -56,7 +58,7 @@ function Login() {
                 <br />
                 <Link to='/register'>Don't have an account? Register</Link>
                 <br />
-                {!!error && <ErrorMessage message={error} />}
+                {!!error && <ErrorMessage message={error.toString()} />}
             </FormContainer>
             : <Loader visible={loggingIn} />}
         </FormDiv>

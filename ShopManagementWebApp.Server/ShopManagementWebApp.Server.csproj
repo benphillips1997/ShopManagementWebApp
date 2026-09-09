@@ -7,6 +7,7 @@
     <SpaRoot>..\shopmanagementwebapp.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:59716</SpaProxyServerUrl>
+    <UserSecretsId>bac029cd-3dba-470c-93ee-5873c8aabeb1</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

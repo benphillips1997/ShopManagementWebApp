@@ -33,7 +33,7 @@ namespace ShopManagementWebApp.Server.Controllers
                 return Unauthorized();
             }
 
-            return _orderService.GetOrders(userId);
+            return Ok(_orderService.GetOrders(userId));
         }
 
         [HttpGet("GetOrder/{orderId}")]
@@ -46,7 +46,7 @@ namespace ShopManagementWebApp.Server.Controllers
                 return NotFound();
             }
 
-            return order;
+            return Ok(order);
         }
 
         [HttpPost("ProcessOrder")]

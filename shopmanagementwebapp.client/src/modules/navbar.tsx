@@ -19,6 +19,9 @@ function Navbar() {
                 {auth?.user && <>
                 <NavbarLink to="/orders">Orders</NavbarLink>
                 <NavbarLink to="/settings">Settings</NavbarLink>
+                {(auth.user.userType === 1 || auth.user.userType === 2) &&
+                <NavbarLink to="/users">Users</NavbarLink>
+                }
                 </> }
                 <Spacer />
                 {!auth?.user ? <>

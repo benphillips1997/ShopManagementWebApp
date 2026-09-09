@@ -10,7 +10,7 @@ import styled from "styled-components";
 
 function Order() {
     const auth = useAuth();
-    const params = useParams();
+    const { orderId } = useParams();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [order, setOrder] = useState<OrderModel>();
@@ -20,13 +20,14 @@ function Order() {
     }, [])
 
     const loadOrder = () => {
-        if (!params.orderId) {
-            navigate("/orders");
+        if (!orderId) {
+            setOrder(undefined);
+            return;
         }
 
         setLoading(true);
 
-        api.GET("/api/Order/GetOrder/{orderId}", { params: { path: { orderId: params.orderId! } }}).then(response => {
+        api.GET("/api/Order/GetOrder/{orderId}", { params: { path: { orderId: orderId } }}).then(response => {
             if (!response.error && response.data) {
                 setOrder(response.data);
             }

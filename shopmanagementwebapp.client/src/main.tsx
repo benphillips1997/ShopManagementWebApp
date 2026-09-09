@@ -17,6 +17,7 @@ import AdminRoute from './pages/admin/adminRoute.tsx';
 import Users from './pages/admin/users.tsx';
 import Reports from './pages/admin/reports.tsx';
 import NotFound from './modules/notFound.tsx';
+import User from './pages/admin/user.tsx';
 
 const router = createBrowserRouter([
   { path: '/', ErrorBoundary: Error, Component: Dashboard },
@@ -31,8 +32,9 @@ const router = createBrowserRouter([
       { path: '/settings', Component: Settings },
       { Component: AdminRoute, children: [
         { path: '/users', Component: Users },
+        { path: '/user/:userId', Component: User },
         { path: '/reports', Component: Reports },
-      ] }
+      ]}
     ]
   },
   { path: "*", Component: NotFound }

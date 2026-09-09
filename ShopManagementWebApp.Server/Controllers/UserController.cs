@@ -44,27 +44,45 @@ namespace ShopManagementWebApp.Server.Controllers
                 return NotFound();
             }
 
-            return user;
+            return Ok(user);
         }
 
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpGet("GetUsers")]
-        public List<User> GetUsers()
+        public ActionResult<List<User>> GetUsers()
         {
-            return _userService.GetUsers();
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var users = _userService.GetUsers(userId);
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(users);
         }
 
         [Authorize]
-        [HttpGet("GetUser/{id}")]
-        public ActionResult<User> GetUser(int id)
+        [HttpGet("GetUser/{userId}")]
+        public ActionResult<User> GetUser(int userId)
         {
-            var user = _userService.GetUser(id);
+            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out var loggedInUserId))
+            {
+                return Unauthorized();
+            }
+
+            var user = _userService.GetUser(userId, loggedInUserId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return Ok(user);
         }
 
         [HttpPost("AddUser")]

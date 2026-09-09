@@ -5,8 +5,8 @@ namespace ShopManagementWebApp.Server.Services
 {
     public interface IUserService
     {
-        List<User> GetUsers();
-        User? GetUser(int id);
+        List<User>? GetUsers(int loggedInUserId);
+        User? GetUser(int userId, int? loggedInUserId = null);
         bool AddUser(User user);
         bool UpdateUser(UpdateUserRequest requestDetails);
         bool DeleteUser(int id);

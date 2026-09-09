@@ -695,7 +695,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/User/GetUser/{id}": {
+    "/api/User/GetUser/{userId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -707,7 +707,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    id: number | string;
+                    userId: number | string;
                 };
                 cookie?: never;
             };

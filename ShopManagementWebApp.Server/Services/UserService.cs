@@ -6,6 +6,7 @@ using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
 using System.Security.Claims;
 using System.Text;
+using static ShopManagementWebApp.Server.Enums;
 
 namespace ShopManagementWebApp.Server.Services
 {
@@ -54,14 +55,27 @@ namespace ShopManagementWebApp.Server.Services
             return response;
         }
 
-        public List<User> GetUsers()
+        public List<User>? GetUsers(int loggedInUserId)
         {
-            return _context.Users.ToList();
+            var validRoles = GetValidRoles(loggedInUserId);
+
+            var users = _context.Users.Where(u => validRoles.Contains(u.UserType));
+
+            return users.ToList();
         }
 
-        public User? GetUser(int id)
+        public User? GetUser(int userId, int? loggedInUserId = null)
         {
-            var user = _context.Users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == id);
+            if (!loggedInUserId.HasValue)
+            {
+                loggedInUserId = userId;
+            }
+
+            var validRoles = GetValidRoles(loggedInUserId.Value);
+
+            var users = _context.Users.Where(u => validRoles.Contains(u.UserType));
+
+            var user = users.Include(u => u.Basket).ThenInclude(b => b.Items).ThenInclude(i => i.Product).FirstOrDefault(x => x.Id == userId);
 
             return user;
         }
@@ -211,6 +225,30 @@ namespace ShopManagementWebApp.Server.Services
             var token = handler.CreateToken(descriptor);
 
             return token;
+        }
+
+        private List<UserType> GetValidRoles(int userId)
+        {
+            var loggedInUser = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (loggedInUser == null)
+            {
+                return new List<UserType>();
+            }
+
+            var validRoles = new List<UserType> { UserType.Customer };
+
+            if (loggedInUser.UserType == UserType.Admin)
+            {
+                validRoles.Add(UserType.Admin);
+            }
+
+            if (loggedInUser.UserType == UserType.SuperAdmin)
+            {
+                validRoles.Add(UserType.SuperAdmin);
+            }
+
+            return validRoles;
         }
     }
 }

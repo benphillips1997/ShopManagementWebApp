@@ -6,8 +6,7 @@
         {
             Customer = 0,
             Admin = 1,
-            SuperAdmin = 2,
-            Guest = 3
+            SuperAdmin = 2
         }
 
         public enum OrderStatus

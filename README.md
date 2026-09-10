@@ -7,11 +7,6 @@ A web based shopping app with product catalog, basket, checkout and order histor
 - Multiple user roles with secure login (User, Admin, Supplier)
 - 
 
-## Prerequisites
-
-
-## Installation
-
 
 ## Usage
 - Generate backend models and api schema with 'npm run gen:api'
@@ -20,10 +15,14 @@ A web based shopping app with product catalog, basket, checkout and order histor
 
 ## Users
 
-User account:
+Customer:
     - email: user@shop.com
     - password: User
 
+Admin:
+    - email: admin@shop.com
+    - password: Admin
 
-## Testing
-
+Superadmin:
+    - email: superadmin@shop.com
+    - password: Super

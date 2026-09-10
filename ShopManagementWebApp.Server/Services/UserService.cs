@@ -242,9 +242,9 @@ namespace ShopManagementWebApp.Server.Services
             {
                 validRoles.Add(UserType.Admin);
             }
-
-            if (loggedInUser.UserType == UserType.SuperAdmin)
+            else if (loggedInUser.UserType == UserType.SuperAdmin)
             {
+                validRoles.Add(UserType.Admin);
                 validRoles.Add(UserType.SuperAdmin);
             }
 

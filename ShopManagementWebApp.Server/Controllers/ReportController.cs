@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Services;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace ShopManagementWebApp.Server.Controllers
 {
     [Authorize(Roles = "Admin,SuperAdmin")]
@@ -19,7 +17,7 @@ namespace ShopManagementWebApp.Server.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet("GetFilteredOrders")]
+        [HttpPost("GetFilteredOrders")]
         public ReportDataResponse GetFilteredOrders([FromBody] ReportFilters filters)
         {
             return _reportService.GetFilteredOrders(filters);

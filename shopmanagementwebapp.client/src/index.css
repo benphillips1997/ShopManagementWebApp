@@ -4,7 +4,7 @@ html, body {
   background-color: #19314E;
 }
 
-h1, h2, h3, h4, h5, h6, p, a, label {
+h1, h2, h3, h4, h5, h6, p, a, label, th, td {
   font-family: Helvetica, sans-serif;
   color: white;
 }

@@ -63,7 +63,7 @@ function Reports() {
                         <label htmlFor="orderStatus">Order status</label><br />
                         <select onChange={(e) => setReportFilters({ ...reportFilters, orderStatus: +e.target.value })}>
                             {Object.entries(OrderStatus).map(([key, val]) => 
-                                <option value={val}>{val === 0 ? "All" : key.charAt(0).toUpperCase() + key.slice(1)}</option>
+                                <option value={val} key={key}>{val === 0 ? "All" : key.charAt(0).toUpperCase() + key.slice(1)}</option>
                             )}
                         </select>
                     </div>
@@ -71,7 +71,7 @@ function Reports() {
                         <label htmlFor="paymentStatus">Payment status</label><br />
                         <select onChange={(e) => setReportFilters({ ...reportFilters, paymentStatus: +e.target.value })}>
                             {Object.entries(PaymentStatus).map(([key, val]) => 
-                                <option value={val}>{val === 0 ? "All" : key.charAt(0).toUpperCase() + key.slice(1)}</option>
+                                <option value={val} key={key}>{val === 0 ? "All" : key.charAt(0).toUpperCase() + key.slice(1)}</option>
                             )}
                         </select>
                     </div>
@@ -93,7 +93,7 @@ function Reports() {
                             </thead>
                             <tbody>
                                 {reportData.map(order => 
-                                    <tr>
+                                    <tr key={order.id}>
                                         <td>{`${new Date(order.orderDate).toDateString()}`}</td>
                                         <td>{getEnumName(OrderStatus, order.orderStatus).charAt(0).toUpperCase() + getEnumName(OrderStatus, order.orderStatus).slice(1)}</td>
                                         <td>{getEnumName(PaymentStatus, order.paymentStatus).charAt(0).toUpperCase() + getEnumName(PaymentStatus, order.paymentStatus).slice(1)}</td>

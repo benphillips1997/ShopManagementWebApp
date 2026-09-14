@@ -13,15 +13,11 @@ namespace ShopManagementWebApp.Server.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly ShopManagementDbContext _context;
         private readonly IOrderService _orderService;
-        private readonly IPaymentService _paymentService;
 
-        public OrderController(ShopManagementDbContext context, IOrderService orderService, IPaymentService paymentService)
+        public OrderController(IOrderService orderService)
         {
-            _context = context;
             _orderService = orderService;
-            _paymentService = paymentService;
         }
         
         [HttpGet("GetOrders")]

@@ -18,7 +18,7 @@ function Dashboard() {
             numOfLinks += 2;
         }
         if (user?.userType === 1 || user?.userType === 2) {
-            numOfLinks += 2;
+            numOfLinks += 3;
         }
         setLinkAmount(numOfLinks);
     }
@@ -33,12 +33,13 @@ function Dashboard() {
                 {user && <>
                 <DashboardItem to="/orders" className="center"><p>Orders</p></DashboardItem>
                 <DashboardItem to="/settings" className="center"><p>Settings</p></DashboardItem>                    
-                    {(user.userType === 1 || user.userType === 2) && <>
-                    <DashboardItem to="/users" className="center"><p>Users</p></DashboardItem>
-                    <DashboardItem to="/reports" className="center"><p>Reports</p></DashboardItem>
-                    </>}
+                {(user.userType === 1 || user.userType === 2) && <>
+                <DashboardItem to="/users" className="center"><p>Users</p></DashboardItem>
+                <DashboardItem to="/reports" className="center"><p>Reports</p></DashboardItem>
+                <DashboardItem to="/products" className="center"><p>Products</p></DashboardItem>
                 </>}
-                {Array.from({length: linkAmount % 4 === 0 ? 0 : 4 - linkAmount % 4},(_) => <DashboardItemPlaceholder>{":)"}</DashboardItemPlaceholder>)}
+                </>}
+                {Array.from({length: linkAmount % 4 === 0 ? 0 : 4 - linkAmount % 4},(_, key) => <DashboardItemPlaceholder key={key}>{":)"}</DashboardItemPlaceholder>)}
             </DashboardContainer>
         </div>
     </>

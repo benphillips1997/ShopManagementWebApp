@@ -40,7 +40,7 @@ function Orders() {
                 {orders && orders.length > 0 ? 
                     <OrdersDiv>
                         {orders?.map(order => 
-                            <OrderContainer className="center-column">
+                            <OrderContainer key={order.id} className="center-column">
                                 <p>Order Date: {new Date(order.orderDate).toDateString()}</p>
                                 <p>Order Status: {getEnumName(OrderStatus, order.orderStatus).charAt(0).toUpperCase() + getEnumName(OrderStatus, order.orderStatus).slice(1)}</p>
                                 <p>Order Address: {order.orderAddress}, {order.orderCountry}</p>

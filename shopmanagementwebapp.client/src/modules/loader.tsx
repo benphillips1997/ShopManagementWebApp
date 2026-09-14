@@ -6,16 +6,17 @@ interface LoaderProps {
     visible?: boolean;
     height?: number;
     width?: number;
+    size?: number;
     backgroundColor?: string;
     spinnerColor?: string;
 }
 
-function Loader({ visible = true, height, width, backgroundColor, spinnerColor }: LoaderProps) {
+function Loader({ visible = true, height, width, size, backgroundColor, spinnerColor }: LoaderProps) {
     return (
         <div className="center">
             <Oval
-                height={height || defaultSize}
-                width={width || defaultSize}
+                height={height ?? size ?? defaultSize}
+                width={width ?? size ?? defaultSize}
                 color={spinnerColor || "#22619c"}
                 visible={visible}
                 ariaLabel="oval-loading"

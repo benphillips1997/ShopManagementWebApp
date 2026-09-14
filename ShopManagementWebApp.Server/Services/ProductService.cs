@@ -1,4 +1,5 @@
-﻿using ShopManagementWebApp.Server.Models;
+﻿using ShopManagementWebApp.Server.Dtos;
+using ShopManagementWebApp.Server.Models;
 
 namespace ShopManagementWebApp.Server.Services
 {
@@ -33,19 +34,41 @@ namespace ShopManagementWebApp.Server.Services
             return true;
         }
 
-        public bool UpdateProduct(Product product)
+        public bool UpdateProduct(UpdateProductDto product)
         {
-            if (product == null) { return false; }
-
             var productToUpdate = _context.Products.FirstOrDefault(x => x.Id == product.Id);
 
             if (productToUpdate == null) { return false; }
 
-            productToUpdate.Name = product.Name;
-            productToUpdate.Description = product.Description;
-            productToUpdate.Cost = product.Cost;
-            productToUpdate.ImageSource = product.ImageSource;
-            productToUpdate.Stock = product.Stock;
+            if (product.Name != null)
+            {
+                productToUpdate.Name = product.Name;
+            }
+
+            if (product.Description != null)
+            {
+                productToUpdate.Description = product.Description;
+            }
+
+            if (product.Cost != null)
+            {
+                productToUpdate.Cost = product.Cost.Value;
+            }
+
+            if (product.ImageSource != null)
+            {
+                productToUpdate.ImageSource = product.ImageSource;
+            }
+
+            if (product.Stock != null)
+            {
+                productToUpdate.Stock = product.Stock.Value;
+            }
+            
+            if (product.IsListed != null)
+            {
+                productToUpdate.IsListed = product.IsListed.Value;
+            }
 
             _context.SaveChanges();
 

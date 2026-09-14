@@ -8,5 +8,6 @@
         public double Cost { get; set; }
         public string? ImageSource { get; set; }
         public int Stock { get; set; }
+        public bool IsListed { get; set; }
     }
 }

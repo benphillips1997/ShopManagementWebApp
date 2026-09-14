@@ -6,20 +6,18 @@ using ShopManagementWebApp.Server.Services;
 
 namespace ShopManagementWebApp.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BasketController : ControllerBase
     {
-        private readonly ShopManagementDbContext _context;
         private readonly IBasketService _basketService;
 
-        public BasketController(ShopManagementDbContext context, IBasketService basketService)
+        public BasketController(IBasketService basketService)
         {
-            _context = context;
             _basketService = basketService;
         }
-
-        [Authorize]
+        
         [HttpGet("GetBasket/{userId}")]
         public Basket? GetBasket(int userId)
         {

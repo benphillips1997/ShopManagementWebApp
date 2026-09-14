@@ -14,3 +14,4 @@ export type ProcessOrderRequestDto = components["schemas"]["ProcessOrderRequestD
 export type ProcessOrderResponseDto = components["schemas"]["ProcessOrderResponseDto"];
 export type ReportFilters = components["schemas"]["ReportFilters"];
 export type ReportDataResponse = components["schemas"]["ReportDataResponse"];
+export type UpdateProductDto = components["schemas"]["UpdateProductDto"];

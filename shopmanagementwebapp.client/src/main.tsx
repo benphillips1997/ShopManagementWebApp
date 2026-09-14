@@ -6,7 +6,7 @@ import Shop from './pages/shop.tsx';
 import Login from './pages/login.tsx';
 import Register from './pages/register.tsx';
 import AuthProvider from './modules/authProvider.tsx';
-import ErrorPage from './modules/errorPage.tsx';
+import ErrorPage from './pages/errorPage.tsx';
 import Orders from './pages/customer/orders.tsx';
 import Order from './pages/customer/order.tsx';
 import Checkout from './pages/customer/checkout.tsx';
@@ -18,6 +18,7 @@ import Users from './pages/admin/users.tsx';
 import Reports from './pages/admin/reports.tsx';
 import NotFound from './modules/notFound.tsx';
 import User from './pages/admin/user.tsx';
+import Products from './pages/admin/products.tsx';
 
 const router = createBrowserRouter([
   { path: '/', ErrorBoundary: Error, Component: Dashboard },
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
         { path: '/users', Component: Users },
         { path: '/user/:userId', Component: User },
         { path: '/reports', Component: Reports },
+        { path: '/products', Component: Products },
       ]}
     ]
   },

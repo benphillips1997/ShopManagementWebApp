@@ -24,6 +24,7 @@ h1, h2, h3, h4, h5, h6, p, a, label, th, td {
 
 button {
   cursor: pointer;
+  margin: 10px;
 
   &:disabled {
     cursor: not-allowed;

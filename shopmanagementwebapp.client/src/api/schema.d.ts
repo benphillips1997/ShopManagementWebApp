@@ -471,9 +471,9 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["Product"];
-                    "text/json": components["schemas"]["Product"];
-                    "application/*+json": components["schemas"]["Product"];
+                    "application/json": components["schemas"]["UpdateProductDto"];
+                    "text/json": components["schemas"]["UpdateProductDto"];
+                    "application/*+json": components["schemas"]["UpdateProductDto"];
                 };
             };
             responses: {
@@ -496,7 +496,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/DeleteProduct/{id}": {
+    "/api/Product/DeleteProduct/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -930,6 +930,7 @@ export interface components {
             imageSource?: null | string;
             /** Format: int32 */
             stock: number;
+            isListed: boolean;
         };
         ReportDataResponse: {
             orders: components["schemas"]["Order"][];
@@ -956,6 +957,18 @@ export interface components {
             orderAddress?: null | string;
             orderCountry?: null | string;
             items?: null | components["schemas"]["OrderItem"][];
+        };
+        UpdateProductDto: {
+            /** Format: int32 */
+            id?: null | number;
+            name?: null | string;
+            description?: null | string;
+            /** Format: double */
+            cost?: number;
+            imageSource?: null | string;
+            /** Format: int32 */
+            stock?: number;
+            isListed?: null | boolean;
         };
         UpdateUserRequest: {
             /** Format: int32 */

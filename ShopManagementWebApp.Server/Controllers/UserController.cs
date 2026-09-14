@@ -13,12 +13,10 @@ namespace ShopManagementWebApp.Server.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ShopManagementDbContext _context;
         private readonly IUserService _userService;
 
-        public UserController(ShopManagementDbContext context, IUserService userService)
+        public UserController(IUserService userService)
         {
-            _context = context;
             _userService = userService;
         }
 

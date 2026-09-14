@@ -58,8 +58,8 @@ function Checkout() {
             {!loading ? <>
                 {basket && basket.items.length > 0 ?
                 <ItemsGrid $length={basket.items.length || 0}>
-                {basket && basket.items.map((item, key) => <>
-                    <Item key={key} className="center-column">
+                {basket && basket.items.map(item => <>
+                    <Item key={item.id} className="center-column">
                         <p>{item.product.name}</p>
                         <p>{item.product.description}</p>
                         <img src={item.product.imageSource ?? undefined} alt={`Image of ${item.product.name}`} />

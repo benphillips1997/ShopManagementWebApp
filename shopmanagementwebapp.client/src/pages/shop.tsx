@@ -82,21 +82,25 @@ function Shop() {
     <>
         <Navbar />
         <div style={{ width: user ? '80%' : '100%' }}>
-            {!loading ? <GridContainer $length={products.length}>
-                {products && products.map((product, key) => 
-                    <GridItem key={key}>
-                        <p>{product.name}</p>
-                        <p>{product.description ?? ""}</p>
-                        <img src={product.imageSource ?? undefined} alt={`Image of ${product.name}`} />
-                        <p>£{product.cost.toFixed(2)}</p>
-                        <AddToBasketButton onClick={() => addToBasket(product, key)}>
-                            Add to basket
-                        </AddToBasketButton>
-                        {productError[key] && <ErrorMessage message={"You must login first"} size={10} time={10} />}
-                    </GridItem>
-                )}
-            </GridContainer>
-            : <Loader visible={loading} />}
+            {!loading ? <>
+                {products && products.filter(p => p.isListed).length > 0 ?
+                    <GridContainer $length={products.length}>
+                        {products.map((product, key) => (
+                        product.isListed &&
+                        <GridItem key={key}>
+                            <p>{product.name}</p>
+                            <p>{product.description ?? ""}</p>
+                            <img src={product.imageSource ?? undefined} alt={`Image of ${product.name}`} />
+                            <p>£{product.cost.toFixed(2)}</p>
+                            <AddToBasketButton onClick={() => addToBasket(product, key)}>
+                                Add to basket
+                            </AddToBasketButton>
+                            {productError[key] && <ErrorMessage message={"You must login first"} size={10} time={10} />}
+                        </GridItem>
+                        ))}
+                    </GridContainer>
+                : <h1 className="center">No products found</h1>}
+            </> : <Loader visible={loading} />}
             {basket && <FloatingBasket width={20} basket={basket} loadBasket={loadBasket} loading={basketLoading} setLoading={setBasketLoading} />}
         </div>
     </>
@@ -124,8 +128,6 @@ const GridItem = styled.div`
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
-    height: 300px;
-    width: 200px;
     
     p {
         font-size: 24px;

@@ -84,7 +84,7 @@ function Shop() {
         <div style={{ width: user ? '80%' : '100%' }}>
             {!loading ? <>
                 {products && products.filter(p => p.isListed).length > 0 ?
-                    <GridContainer $length={products.length}>
+                    <GridContainer $length={products.filter(p => p.isListed).length}>
                         {products.map((product, key) => (
                         product.isListed &&
                         <GridItem key={key}>

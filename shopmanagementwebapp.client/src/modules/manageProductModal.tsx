@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { type Product } from "../api/interfaces";
+import { type Product, type UpdateProductDto } from "../api/interfaces";
 import { api } from "../api/client";
 import styled from "styled-components";
+import Loader from "./loader";
 
 interface ManageProductModalProps {
     productToEdit: Product | null;
@@ -16,7 +17,7 @@ function ManageProductModal({ productToEdit, closeModal }: ManageProductModalPro
         event.preventDefault();
         setProcessing(true);
         
-        api.POST(`/api/Product/${productToEdit ? "Update" : "Add"}Product`, { body: { query: product }}).then(response => {
+        api.POST(`/api/Product/${productToEdit ? "Update" : "Add"}Product`, { body: product }).then(response => {
             if (!response.error && response.data) {
                 closeModal(true);
             }
@@ -34,28 +35,29 @@ function ManageProductModal({ productToEdit, closeModal }: ManageProductModalPro
         <ModalContainer className="center">
             <form onSubmit={addOrUpdateProduct} onChange={(e) => setProduct({ ...product, [e.target.name]: e.target.value })} className="center-column">
                 <div>
-                    <label htmlFor="productName">Product name</label><br />
-                    <input type="text" id="productName" name="productName" value={product?.name ?? ""} required />
+                    <label htmlFor="name">Product name</label><br />
+                    <input type="text" id="name" name="name" defaultValue={product?.name ?? ""} required />
                 </div>
                 <div>
-                    <label htmlFor="productDescription">Product description</label><br />
-                    <input type="text" id="productDescription" name="productDescription" value={product?.description ?? ""} />
+                    <label htmlFor="description">Product description</label><br />
+                    <input type="text" id="description" name="description" defaultValue={product?.description ?? ""} />
                 </div>
                 <div>
-                    <label htmlFor="productImage">Product image</label><br />
+                    <label htmlFor="imageSource">Product image</label><br />
                     {!!product.imageSource && <img src={product.imageSource} width={40} height={40} />}
-                    <input type="file" accept="image/*" id="productImage" name="productImage">Choose image</input>
+                    <input type="file" accept="image/*" id="imageSource" name="imageSource" />
                 </div>
                 <div>
-                    <label htmlFor="productCost">Product cost</label><br />
-                    <input type="text" id="productCost" name="productCost" value={product?.cost ?? ""} required />
+                    <label htmlFor="cost">Product cost</label><br />
+                    <input type="text" id="cost" name="cost" defaultValue={product?.cost ?? ""} required />
                 </div>
                 <div>
-                    <label htmlFor="productStock">Product stock</label><br />
-                    <input type="number" id="productStock" name="productStock" value={product?.stock ?? ""} required />
+                    <label htmlFor="stock">Product stock</label><br />
+                    <input type="number" id="stock" name="stock" defaultValue={product?.stock ?? ""} required />
                 </div>
                 <button type="submit" disabled={processing}>{productToEdit ? "Update" : "Add"} product</button>
                 <button type="button" disabled={processing} onClick={() => closeModal(false)}>Cancel</button>
+                <Loader visible={processing} size={20} />
             </form>
         </ModalContainer>
     </>

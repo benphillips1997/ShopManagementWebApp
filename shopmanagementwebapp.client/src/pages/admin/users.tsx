@@ -6,10 +6,12 @@ import Loader from "../../modules/loader";
 import styled from "styled-components";
 import { getEnumName, UserType } from "../../enums";
 import { Link } from "react-router-dom";
+import ErrorMessage from "../../modules/errorMessage";
 
 function Users() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadUsers();
@@ -27,6 +29,7 @@ function Users() {
             }
         }).catch(error => {
             console.log(error);
+            setError(error);
         }).finally(() => setLoading(false))
     };
 
@@ -46,6 +49,7 @@ function Users() {
                     ) : <p>No users found</p>}
                 </UserContainer>
             : <Loader />}
+            {!!error && <ErrorMessage message={error} />} 
         </div>
     </>
     );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ErrorMessage from "../modules/message";
+import ErrorMessage from "../modules/errorMessage";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";
@@ -25,7 +25,7 @@ function Register() {
                 throw Error("Failed to register account");
             }                      
         }).catch(error => {
-            console.error('Registration error: ', error);
+            console.error(error);
             setError(error);
         }).finally(() => setLoading(false))
     }

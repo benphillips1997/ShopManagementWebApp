@@ -7,13 +7,13 @@ import { type Order as OrderModel } from "../../api/interfaces";
 import Loader from "../../modules/loader";
 import { getEnumName, OrderStatus } from "../../enums";
 import styled from "styled-components";
+import ErrorMessage from "../../modules/errorMessage";
 
 function Order() {
-    const auth = useAuth();
     const { orderId } = useParams();
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const [order, setOrder] = useState<OrderModel>();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadOrder();
@@ -36,6 +36,7 @@ function Order() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         }).finally(() => setLoading(false))
     }
 
@@ -43,19 +44,20 @@ function Order() {
     <>
         <Navbar />
         <div className="center">
-        {!loading ? <>
-            {order ?
-            <OrderDiv className='center-column'>
-                <p>Order date: {new Date(order.orderDate).toDateString()}</p>
-                <p>Order Status: {getEnumName(OrderStatus, order.orderStatus).charAt(0).toUpperCase() + getEnumName(OrderStatus, order.orderStatus).slice(1)}</p>
-                <p>Order Address: {order.orderAddress}, {order.orderCountry}</p>
-                {order.items.map(item => 
-                            <p>{item.product.name}: 5 - £{item.costAtPurchase}</p>
-                )}
-                <p>Total Cost: £{order.totalCost}</p>
-            </OrderDiv>
-            : <h1 className="center">Could not retrieve order details</h1>}
-        </> : <Loader />}
+            {!loading ? <>
+                {order ?
+                <OrderDiv className='center-column'>
+                    <p>Order date: {new Date(order.orderDate).toDateString()}</p>
+                    <p>Order Status: {getEnumName(OrderStatus, order.orderStatus).charAt(0).toUpperCase() + getEnumName(OrderStatus, order.orderStatus).slice(1)}</p>
+                    <p>Order Address: {order.orderAddress}, {order.orderCountry}</p>
+                    {order.items.map(item => 
+                                <p>{item.product.name}: 5 - £{item.costAtPurchase}</p>
+                    )}
+                    <p>Total Cost: £{order.totalCost}</p>
+                </OrderDiv>
+                : <h1 className="center">Could not retrieve order details</h1>}
+            </> : <Loader />}
+            {!!error && <ErrorMessage message={error} />}
         </div>
     </>
     );

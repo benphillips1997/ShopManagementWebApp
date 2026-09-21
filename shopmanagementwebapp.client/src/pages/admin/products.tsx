@@ -6,6 +6,7 @@ import Loader from "../../modules/loader";
 import styled, { css } from "styled-components";
 import ManageProductModal from "../../modules/manageProductModal";
 import { useAuth } from "../../modules/authProvider";
+import ErrorMessage from "../../modules/errorMessage";
 
 function Products() {
     const [products, setProducts] = useState<Product[]>();
@@ -13,6 +14,7 @@ function Products() {
     const [modalVisible, setModalVisible] = useState(false);
     const [productToEdit, setProductToEdit] = useState<Product | null>(null);
     const user = useAuth()?.user;
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadProducts();
@@ -30,6 +32,7 @@ function Products() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         }).finally(() => setLoading(false))
     }
 
@@ -41,12 +44,16 @@ function Products() {
             else {
                 throw Error("Could not update product");
             }
-        }).catch(error => console.error(error))
+        }).catch(error => {
+            console.error(error);
+            setError(error);
+        })
     }
 
     const deleteProduct = (product: Product) => {
         if (!product.id) {
             console.error("Deletion error: Cannot identify product id");
+            setError("Deletion error: Cannot identify product id");
             return;
         }
 
@@ -61,7 +68,10 @@ function Products() {
             else {
                 throw Error("Error deleting product");
             }
-        }).catch(error => console.error(error))
+        }).catch(error => {
+            console.error(error);
+            setError(error);
+        })
     }
 
     const showModal = (product: Product | null) => {
@@ -102,6 +112,7 @@ function Products() {
                     </GridContainer>
                 : <h1>No products found</h1>}
             </> : <Loader />}
+            {!!error && <ErrorMessage message={error} />}
         </div>
         {modalVisible && <ManageProductModal productToEdit={productToEdit} closeModal={closeModal} />}
     </>

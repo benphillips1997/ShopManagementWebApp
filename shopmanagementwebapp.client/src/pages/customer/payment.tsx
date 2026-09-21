@@ -5,12 +5,14 @@ import { api } from "../../api/client";
 import { useAuth } from "../../modules/authProvider";
 import type { Basket, Order, ProcessOrderRequestDto } from "../../api/interfaces";
 import styled from "styled-components";
+import ErrorMessage from "../../modules/errorMessage";
 
 function Payment() {
     const user = useAuth()?.user;
     const [addressInput, setAddressInput] = useState({ address: user?.address ?? "", country: user?.country ?? "" });
     const [paymentInfo, setPaymentInfo] = useState({ cardNumber: "", expiryMonth: "", expiryYear: "", cvv: "" });
     const [basket, setBasket] = useState<Basket>();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadBasket();
@@ -26,6 +28,7 @@ function Payment() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         })
     }
 
@@ -33,6 +36,7 @@ function Payment() {
         event.preventDefault();
         if (!user || !basket || basket.items.length < 1) {
             console.error("Error: ", !user ? "user cannot be identified" : "no items in basket");
+            setError("Error: " + !user ? "user cannot be identified" : "no items in basket");
             return;
         }
 
@@ -65,6 +69,7 @@ function Payment() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         })
     }
 
@@ -138,6 +143,7 @@ function Payment() {
                 </PaymentComponent>
                 <button type="submit">Pay</button>
             </PaymentContainer>
+            {!!error && <ErrorMessage message={error} />}
         </div>
     </>
     );

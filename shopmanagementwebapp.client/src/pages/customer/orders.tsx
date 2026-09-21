@@ -7,11 +7,13 @@ import { api } from "../../api/client";
 import Loader from "../../modules/loader";
 import { getEnumName, OrderStatus } from "../../enums";
 import { Link } from "react-router-dom";
+import ErrorMessage from "../../modules/errorMessage";
 
 function Orders() {
     const auth = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadOrders();
@@ -29,6 +31,7 @@ function Orders() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         }).finally(() => setLoading(false))
     }
 
@@ -51,6 +54,7 @@ function Orders() {
                     </OrdersDiv>
                 : <h1>No orders to display</h1>} 
             </> : <Loader />}
+            {!!error && <ErrorMessage message={error} />}
         </div>
         </>
     );

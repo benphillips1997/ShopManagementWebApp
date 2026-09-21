@@ -7,6 +7,7 @@ import { api } from "../../api/client";
 import styled from "styled-components";
 import type { UpdateUserRequest } from "../../api/interfaces";
 import Loader from '../../modules/loader';
+import ErrorMessage from '../../modules/errorMessage';
 
 function Settings() {
     const auth = useAuth();
@@ -27,11 +28,13 @@ function Settings() {
         () => Object.keys(defaultFormData).reduce((acc, key) => ({ ...acc, [key]: false }), {})
     );
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const updateDetails = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (editForm.currentPassword && formData.newPassword !== formData.confirmPassword) {
             console.log("Passwords do not match");
+            setError("Passwords do not match");
             return;
         }
 
@@ -62,6 +65,7 @@ function Settings() {
                     }
                 }).catch(error => {
                     console.log(error);
+                    setError(error);
                 })
             }
             else {
@@ -69,6 +73,7 @@ function Settings() {
             }
         }).catch(error => {
             console.log(error);
+            setError(error);
         }).finally(() => setLoading(false))
     }
 
@@ -226,7 +231,8 @@ function Settings() {
                         <button type="submit" disabled={Object.values(editForm).every(value => value === false)}>Confirm changes</button>
                     </form>
                 </TabPanel>
-            </TabContainer>
+                {!!error && <ErrorMessage message={error} />}
+            </TabContainer>            
             : <Loader />}
         </div>
     </>

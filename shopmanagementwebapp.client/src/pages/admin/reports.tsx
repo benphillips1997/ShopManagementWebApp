@@ -7,6 +7,7 @@ import Loader from "../../modules/loader";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import { getEnumName, OrderStatus, PaymentStatus } from "../../enums";
+import ErrorMessage from "../../modules/errorMessage";
 
 const reportFilterDefaults: ReportFilters = {
     orderDateStart: new Date(new Date().getFullYear(), new Date().getMonth() - 1).toISOString(),
@@ -19,6 +20,7 @@ function Reports() {
     const [reportFilters, setReportFilters] = useState<ReportFilters>(reportFilterDefaults);
     const [reportData, setReportData] = useState<Order[]>();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const filterReport = (event: React.SubmitEvent) => {
         event.preventDefault();
@@ -34,6 +36,7 @@ function Reports() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         }).finally(() => setLoading(false))
     }
 
@@ -107,6 +110,7 @@ function Reports() {
                     : <h3>No results found</h3>}
                 </> : <Loader />}
             </ReportDiv>
+            {!!error && <ErrorMessage message={error} />}
         </div>
     </>
     );

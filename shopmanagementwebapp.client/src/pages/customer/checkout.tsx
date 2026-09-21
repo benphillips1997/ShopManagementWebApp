@@ -6,12 +6,14 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import type { Basket, BasketItem } from "../../api/interfaces";
 import { api } from "../../api/client";
+import ErrorMessage from "../../modules/errorMessage";
 
 
 function Checkout() {
     const user = useAuth()?.user;
     const [loading, setLoading] = useState(false);
     const [basket, setBasket] = useState<Basket>();
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadBasket();
@@ -27,12 +29,14 @@ function Checkout() {
             }
         }).catch(error => {
             console.log(error);
+            setError(error);
         })
     }
 
     const removeFromBasket = (basketItem: BasketItem) => {
         if (!basket) {
             console.log("Error: cannot identify basket");
+            setError("Error: cannot identify basket");
             return;
         }
 
@@ -47,7 +51,8 @@ function Checkout() {
                 throw Error("Error removing from basket");
             }            
         }).catch(error => {
-            console.error('Error removing item from basket: ', error)
+            console.error(error)
+            setError(error);
         });
     }
 
@@ -79,6 +84,7 @@ function Checkout() {
                     </Link>
                 </BottomDiv>
             </> : <Loader />}
+            {!!error && <ErrorMessage message={error} />}
         </div>
     </>
     );

@@ -16,6 +16,7 @@ function Shop() {
     const [productError, setProductError] = useState<boolean[]>([]);
     const [basket, setBasket] = useState<Basket>();
     const [basketLoading, setBasketLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         loadProducts();
@@ -34,7 +35,10 @@ function Shop() {
             const data = response.data;
             setProducts(data ?? []);
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error);
+            setError(error);
+        })
         .finally(() => setLoading(false))
     }
 
@@ -48,6 +52,7 @@ function Shop() {
             }
         }).catch(error => {
             console.error(error);
+            setError(error);
         })
     }
 
@@ -67,7 +72,6 @@ function Shop() {
 
         api.POST("/api/Basket/AddItemToBasket/{basketId}", { params: { path: { basketId: basket.id! }}, body: basketItem }).then(async response => {
             if (response.data) {
-                console.log("Item added to basket");
                 await loadBasket();
             }
             else {
@@ -75,6 +79,7 @@ function Shop() {
             }
         }).catch(error => {
             console.log(error)
+            setError(error);
         }).finally(() => setBasketLoading(false))
     }
 
@@ -95,7 +100,8 @@ function Shop() {
                             <AddToBasketButton onClick={() => addToBasket(product, key)}>
                                 Add to basket
                             </AddToBasketButton>
-                            {productError[key] && <ErrorMessage message={"You must login first"} size={10} time={5} />}
+                            {productError[key] && <ErrorMessage message={"You must login first"} />}
+                            {!!error && <ErrorMessage message={error} />}
                         </GridItem>
                         ))}
                     </GridContainer>

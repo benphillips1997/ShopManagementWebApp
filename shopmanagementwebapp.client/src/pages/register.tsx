@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ErrorMessage from "../modules/errorMessage";
+import ErrorMessage from "../modules/message";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";

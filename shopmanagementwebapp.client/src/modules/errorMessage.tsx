@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import { useCallback, useState } from "react";
+import Message from "./message";
 
 interface ErrorMessageProps {
     message: string;
@@ -7,21 +8,15 @@ interface ErrorMessageProps {
 }
 
 function ErrorMessage({ message, size, time }: ErrorMessageProps) {
+    const [active, setActive] = useState(true);
+
+    const unMountMessage = useCallback(() => setActive(false), []);
 
     return (
-        <Message size={size} $time={time}>{message}</Message>
-    );
+    <>
+        {active && <Message message={message} size={size} time={time} disableMe={unMountMessage} />}
+    </>
+    )
 }
 
 export default ErrorMessage;
-
-const Message = styled.p<{ size?: number, $time?: number }>`
-    position: fixed;
-    border-radius: 15px;
-    top: 20%;
-    background-color: rgba(61, 107, 129, 0.5);
-    position: fixed;
-    color: red;
-    font-size: ${props => props.size ?? "16"}px;
-    padding: 8px 20px;
-`

@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent } from "react";
 import { useAuth } from "../modules/authProvider";
-import ErrorMessage from "../modules/errorMessage";
+import ErrorMessage from "../modules/message";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../modules/navbar";
 import styled from "styled-components";

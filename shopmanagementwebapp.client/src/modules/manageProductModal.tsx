@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { type Product, type UpdateProductDto } from "../api/interfaces";
+import { type Product } from "../api/interfaces";
 import { api } from "../api/client";
 import styled from "styled-components";
 import Loader from "./loader";

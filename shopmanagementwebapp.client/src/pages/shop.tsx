@@ -4,9 +4,9 @@ import Loader from "../modules/loader";
 import FloatingBasket from "../modules/floatingBasket";
 import { useAuth } from "../modules/authProvider";
 import Navbar from "../modules/navbar";
-import ErrorMessage from "../modules/errorMessage";
 import { api } from "../api/client";
 import type { Basket, BasketItem, Product } from "../api/interfaces";
+import ErrorMessage from "../modules/errorMessage";
 
 function Shop() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -95,7 +95,7 @@ function Shop() {
                             <AddToBasketButton onClick={() => addToBasket(product, key)}>
                                 Add to basket
                             </AddToBasketButton>
-                            {productError[key] && <ErrorMessage message={"You must login first"} size={10} time={10} />}
+                            {productError[key] && <ErrorMessage message={"You must login first"} size={10} time={5} />}
                         </GridItem>
                         ))}
                     </GridContainer>
@@ -128,6 +128,8 @@ const GridItem = styled.div`
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
+    width: 200px;
+    min-height: 350px;
     
     p {
         font-size: 24px;

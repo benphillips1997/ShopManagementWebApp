@@ -7,7 +7,7 @@
         public string? Description { get; set; }
         public double Cost { get; set; }
         public string? ImageSource { get; set; }
-        public int Stock { get; set; }
         public bool IsListed { get; set; }
+        public Supplier? Supplier { get; set; }
     }
 }

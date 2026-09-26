@@ -4,4 +4,5 @@
     <Deploy />
   </Project>
   <Project Path="ShopManagementWebApp.Server/ShopManagementWebApp.Server.csproj" />
+  <Project Path="UnitTests/UnitTests.csproj" Id="dea1af99-59ed-484c-bf7a-0a2ed0750807" />
 </Solution>

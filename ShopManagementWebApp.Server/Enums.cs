@@ -27,5 +27,24 @@
             Successful = 3,
             Refunded = 4
         }
+
+        public enum StockChangeReason
+        {
+            NotSet = 0,
+            Sale = 1,
+            Return = 2,
+            PurchaseOrder = 3,
+            ManualAdjustment = 4
+        }
+
+        public enum PurchaseOrderStatus
+        {
+            NotSet = 0,
+            Draft = 1,
+            Sent = 2,
+            Received = 3,
+            Cancelled = 4,
+            Returned = 5
+        }
     }
 }

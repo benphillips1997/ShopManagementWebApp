@@ -62,7 +62,7 @@ namespace ShopManagementWebApp.Server.Services
 
             if (product.Stock != null)
             {
-                productToUpdate.Stock = product.Stock.Value;
+                //productToUpdate.Stock = product.Stock.Value;
             }
             
             if (product.IsListed != null)

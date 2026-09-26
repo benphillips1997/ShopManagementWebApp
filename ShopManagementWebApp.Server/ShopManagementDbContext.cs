@@ -9,6 +9,21 @@ namespace ShopManagementWebApp.Server
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Basket> Baskets { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<StockLog> StockLog { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Inventory>(e =>
+            {
+                e.HasKey(i => i.ProductId);
+                e.HasOne(i => i.Product)
+                 .WithOne()
+                 .HasForeignKey<Inventory>(i => i.ProductId);
+            });
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

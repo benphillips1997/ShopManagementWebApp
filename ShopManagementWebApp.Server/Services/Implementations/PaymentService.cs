@@ -1,9 +1,10 @@
 ﻿using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
+using ShopManagementWebApp.Server.Services.Interfaces;
 using Stripe;
 using Stripe.Checkout;
 
-namespace ShopManagementWebApp.Server.Services
+namespace ShopManagementWebApp.Server.Services.Implementations
 {
     public class PaymentService : IPaymentService
     {

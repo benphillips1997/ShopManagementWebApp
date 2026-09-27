@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Dtos;
-using ShopManagementWebApp.Server.Services;
+using ShopManagementWebApp.Server.Services.Interfaces;
 
 namespace ShopManagementWebApp.Server.Controllers
 {

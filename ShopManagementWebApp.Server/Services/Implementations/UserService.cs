@@ -4,11 +4,12 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
+using ShopManagementWebApp.Server.Services.Interfaces;
 using System.Security.Claims;
 using System.Text;
 using static ShopManagementWebApp.Server.Enums;
 
-namespace ShopManagementWebApp.Server.Services
+namespace ShopManagementWebApp.Server.Services.Implementations
 {
     public class UserService : IUserService
     {
@@ -167,9 +168,9 @@ namespace ShopManagementWebApp.Server.Services
             return true;
         }
 
-        private string HashPassword(User user, string password)
+        public string HashPassword(User user, string password)
         {
-            if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 throw new Exception("Password does not contain any characters");
             }
@@ -180,9 +181,9 @@ namespace ShopManagementWebApp.Server.Services
             return hash;
         }
 
-        private bool VerifyPassword(ref User user, string hashedPassword, string providedPassword)
+        public bool VerifyPassword(ref User user, string hashedPassword, string providedPassword)
         {
-            if (String.IsNullOrEmpty(providedPassword)) { return false; }
+            if (string.IsNullOrWhiteSpace(providedPassword)) { return false; }
 
             var hasher = new PasswordHasher<User>();
             PasswordVerificationResult result = hasher.VerifyHashedPassword(user, hashedPassword, providedPassword);
@@ -198,7 +199,7 @@ namespace ShopManagementWebApp.Server.Services
             return result == PasswordVerificationResult.Success;
         }
 
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

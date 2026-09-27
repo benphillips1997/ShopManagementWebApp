@@ -46,5 +46,13 @@
             Cancelled = 4,
             Returned = 5
         }
+
+        public enum UpdateInventoryType
+        {
+            NotSet = 0,
+            QuantityOnly = 1,
+            ReservedOnly = 2,
+            Both = 3
+        }
     }
 }

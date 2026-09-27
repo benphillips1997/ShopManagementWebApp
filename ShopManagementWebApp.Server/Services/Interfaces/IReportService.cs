@@ -1,6 +1,6 @@
 ﻿using ShopManagementWebApp.Server.Dtos;
 
-namespace ShopManagementWebApp.Server.Services
+namespace ShopManagementWebApp.Server.Services.Interfaces
 {
     public interface IReportService
     {

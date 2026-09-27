@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
+using ShopManagementWebApp.Server.Services.Interfaces;
 using static ShopManagementWebApp.Server.Enums;
 
-namespace ShopManagementWebApp.Server.Services
+namespace ShopManagementWebApp.Server.Services.Implementations
 {
     public class OrderService : IOrderService
     {

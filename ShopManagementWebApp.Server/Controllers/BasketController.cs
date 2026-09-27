@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Models;
-using ShopManagementWebApp.Server.Services;
+using ShopManagementWebApp.Server.Services.Interfaces;
 
 namespace ShopManagementWebApp.Server.Controllers
 {

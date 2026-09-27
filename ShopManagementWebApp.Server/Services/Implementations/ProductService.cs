@@ -1,7 +1,8 @@
 ﻿using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
+using ShopManagementWebApp.Server.Services.Interfaces;
 
-namespace ShopManagementWebApp.Server.Services
+namespace ShopManagementWebApp.Server.Services.Implementations
 {
     public class ProductService : IProductService
     {

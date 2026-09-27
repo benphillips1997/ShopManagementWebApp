@@ -7,7 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using ShopManagementWebApp.Server;
 using ShopManagementWebApp.Server.Models;
-using ShopManagementWebApp.Server.Services;
+using ShopManagementWebApp.Server.Services.Implementations;
+using ShopManagementWebApp.Server.Services.Interfaces;
 using Stripe;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
@@ -22,7 +23,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ShopManagementDbContext>();
 
-builder.Services.AddScoped<IProductService, ShopManagementWebApp.Server.Services.ProductService>();
+builder.Services.AddScoped<IProductService, ShopManagementWebApp.Server.Services.Implementations.ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddScoped<IOrderService, OrderService>();

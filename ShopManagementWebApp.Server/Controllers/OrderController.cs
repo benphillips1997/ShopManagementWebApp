@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShopManagementWebApp.Server.Dtos;
 using ShopManagementWebApp.Server.Models;
-using ShopManagementWebApp.Server.Services;
+using ShopManagementWebApp.Server.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace ShopManagementWebApp.Server.Controllers
